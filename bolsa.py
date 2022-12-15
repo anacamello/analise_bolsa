@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[131]:
 
 
 import streamlit as st
 import pandas as pd
-import yfinance as yahooFinance
+#import yfinance as yahooFinance
 import datetime
 import itertools
 from datetime import date, timedelta
@@ -60,14 +60,14 @@ if botao:
         
         codigoYahoo = str(codigoYahoo['Codigo_Yahoo'])
      
-        dadosAcao = yahooFinance.Ticker(codigoYahoo)
+        #dadosAcao = yahooFinance.Ticker(codigoYahoo)
         
         with tabs[qtdAbas+1]:
             
-            dados_acao_tabela = pd.DataFrame(dadosAcao.history(start=dataInicial, end=dataFinal))
+           # dados_acao_tabela = pd.DataFrame(dadosAcao.history(start=dataInicial, end=dataFinal))
             #dados_acao_tabela.rename(columns={'Date': 'Data'}, inplace = True)
             
-            st.text(dados_acao_tabela)
+            #st.text(dados_acao_tabela)
             qtdAbas = qtdAbas + 1
         
     
