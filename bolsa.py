@@ -1,18 +1,20 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[55]:
 
 
 import streamlit as st
 import pandas as pd
-import yfinance as yahooFinance
+import pandas_datareader as pdr
+from pandas_datareader import data as web
+import pandas as pd
 import datetime
 import itertools
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime, time
 
 
-# In[39]:
+# In[66]:
 
 
 acoes_completo = pd.read_csv('acoes.csv', sep=";")
@@ -41,7 +43,19 @@ variacao_max = variacao[1]
 
 botao = st.sidebar.button('Calcular')
 
-dataFinal = date.today() - timedelta(1)
+if(datetime.today().time().hour > 18):
+    
+    dataFinal = date.today()
+    
+else:
+    
+    if(datetime.today().time().hour > 18 and datetime.today().time().minutes >= 30):
+        
+        dataFinal = date.today()
+    
+    else:
+    
+        dataFinal = date.today() - timedelta(1)
 
 #Cria as abas
 qtdAbas = 0
@@ -54,8 +68,6 @@ if botao:
     
             for acao in acoes_selecionadas:
 
-                #parametros_aba = st.text_input(acao, acao)  
-
                 st.session_state['tabs'].append(acao)    
 
             tabs = st.tabs(st.session_state['tabs'])
@@ -66,11 +78,11 @@ if botao:
 
                 codigoYahoo = codigoYahoo.iloc[0, 0]
 
-                dadosAcao = yahooFinance.Ticker(codigoYahoo)
+                #dadosAcao = yahooFinance.Ticker(codigoYahoo)
 
                 with tabs[qtdAbas+1]:
 
-                    dados_acao_tabela = pd.DataFrame(dadosAcao.history(start=dataInicial, end=dataFinal))
+                    dados_acao_tabela = pd.DataFrame(web.DataReader(codigoYahoo, data_source='yahoo', start=dataInicial, end = dataFinal))
                     dados_acao_tabela = dados_acao_tabela.reset_index()
                     
                     dados_acao_tabela.rename(columns={'Date': 'Data'}, inplace = True)
@@ -78,10 +90,11 @@ if botao:
                     dados_acao_tabela.rename(columns={'High': 'Máxima'}, inplace = True)
                     dados_acao_tabela.rename(columns={'Low': 'Mínima'}, inplace = True)
                     dados_acao_tabela.rename(columns={'Close': 'Fechamento'}, inplace = True)
-                    dados_acao_tabela.drop(columns=['Dividends'], axis = 1, inplace = True)
-                    dados_acao_tabela.drop(columns=['Stock Splits'], axis = 1, inplace = True)                    
+                    dados_acao_tabela.rename(columns={'Adj Close': 'Fech. Ajustado'}, inplace = True)
                     
                     dados_acao_tabela['Data'] = dados_acao_tabela['Data'].dt.strftime('%d/%m/%Y')
+                    
+                    dados_acao_tabela = dados_acao_tabela[['Data', 'Abertura', 'Mínima', 'Máxima', 'Fechamento', 'Fech. Ajustado']]
                     
                     st.dataframe(dados_acao_tabela)
                     qtdAbas = qtdAbas + 1
