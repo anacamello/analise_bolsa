@@ -1,3 +1,5 @@
-yfinance
+pandas_datareader
 streamlit
 pandas
+datetime
+itertools
