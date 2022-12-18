@@ -2,5 +2,4 @@ streamlit
 pandas
 pandas-datareader
 datetime
-itertools
 yfinance
