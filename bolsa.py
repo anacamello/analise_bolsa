@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[55]:
+# In[24]:
 
 
 import streamlit as st
@@ -10,11 +10,12 @@ import pandas_datareader as pdr
 from pandas_datareader import data as web
 import pandas as pd
 import datetime
-import itertools
 from datetime import date, timedelta, datetime, time
+import itertools
+import yfinance as yf
 
 
-# In[66]:
+# In[25]:
 
 
 acoes_completo = pd.read_csv('acoes.csv', sep=";")
@@ -43,6 +44,11 @@ variacao_max = variacao[1]
 
 botao = st.sidebar.button('Calcular')
 
+#Cria as abas
+qtdAbas = 0
+
+yf.pdr_override() 
+
 if(datetime.today().time().hour > 18):
     
     dataFinal = date.today()
@@ -56,9 +62,6 @@ else:
     else:
     
         dataFinal = date.today() - timedelta(1)
-
-#Cria as abas
-qtdAbas = 0
 
 if botao:   
     
@@ -78,11 +81,9 @@ if botao:
 
                 codigoYahoo = codigoYahoo.iloc[0, 0]
 
-                #dadosAcao = yahooFinance.Ticker(codigoYahoo)
-
                 with tabs[qtdAbas+1]:
 
-                    dados_acao_tabela = pd.DataFrame(web.DataReader(codigoYahoo, data_source='yahoo', start=dataInicial, end = dataFinal))
+                    dados_acao_tabela = yf.download(codigoYahoo, dataInicial, dataFinal)
                     dados_acao_tabela = dados_acao_tabela.reset_index()
                     
                     dados_acao_tabela.rename(columns={'Date': 'Data'}, inplace = True)
@@ -97,6 +98,7 @@ if botao:
                     dados_acao_tabela = dados_acao_tabela[['Data', 'Abertura', 'Mínima', 'Máxima', 'Fechamento', 'Fech. Ajustado']]
                     
                     st.dataframe(dados_acao_tabela)
+                    
                     qtdAbas = qtdAbas + 1
                     
         else:
