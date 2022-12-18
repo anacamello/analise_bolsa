@@ -1,5 +1,4 @@
 streamlit
 pandas
 pandas-datareader
-datetime
 yfinance
