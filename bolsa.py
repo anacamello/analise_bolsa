@@ -14,17 +14,14 @@ from datetime import date, timedelta, datetime, time
 import itertools
 import yfinance as yf
 from decimal import Decimal
-import locale
 
 
-# In[60]:
+# In[2]:
 
 
 def formata_cores_planilha(value):
     color = 'blue' if value != 0 else 'black'
     return 'color: %s' % color
-
-locale.setlocale(locale.LC_ALL, 'pt_BR')
 
 acoes_completo = pd.read_csv('acoes.csv', sep=";")
 acoes_lista = list(acoes_completo['Codigo'])
@@ -274,14 +271,35 @@ if botao:
                     
                     #formata dados_acao_tabela
                     
-                    for i in dados_acao_tabela.index:
-                                    
-                        dados_acao_tabela.loc[i, 'Abertura'] = locale.currency(dados_acao_tabela.at[i, 'Abertura'], grouping=True)
-                        dados_acao_tabela.loc[i, 'Máxima'] = locale.currency(dados_acao_tabela.at[i, 'Máxima'], grouping=True)
-                        dados_acao_tabela.loc[i, 'Mínima'] = locale.currency(dados_acao_tabela.at[i, 'Mínima'], grouping=True)
-                        dados_acao_tabela.loc[i, 'Fechamento'] = locale.currency(dados_acao_tabela.at[i, 'Fechamento'], grouping=True)
-                        dados_acao_tabela.loc[i, 'Fech. Ajustado'] = locale.currency(dados_acao_tabela.at[i, 'Fech. Ajustado'], grouping=True)
-                        dados_acao_tabela.loc[i, 'Volume'] = locale.currency(dados_acao_tabela.at[i, 'Volume'], grouping=True)
+                    dados_acao_tabela['Abertura'] = pd.Series(["R$ {0: _.2f}".format(val) for val in dados_acao_tabela['Abertura']], index = dados_acao_tabela.index)
+                    dados_acao_tabela['Abertura'] = dados_acao_tabela['Abertura'].astype(str)
+                    dados_acao_tabela['Abertura'] = dados_acao_tabela['Abertura'].str.replace('.', ',')
+                    dados_acao_tabela['Abertura'] = dados_acao_tabela['Abertura'].replace('_', '.')
+                    
+                    dados_acao_tabela['Máxima'] = pd.Series(["R$ {0: _.2f}".format(val) for val in dados_acao_tabela['Máxima']], index = dados_acao_tabela.index)
+                    dados_acao_tabela['Máxima'] = dados_acao_tabela['Máxima'].astype(str)
+                    dados_acao_tabela['Máxima'] = dados_acao_tabela['Máxima'].str.replace('.', ',')
+                    dados_acao_tabela['Máxima'] = dados_acao_tabela['Máxima'].str.replace('_', '.')
+                    
+                    dados_acao_tabela['Mínima'] = pd.Series(["R$ {0: _.2f}".format(val) for val in dados_acao_tabela['Mínima']], index = dados_acao_tabela.index)
+                    dados_acao_tabela['Mínima'] = dados_acao_tabela['Mínima'].astype(str)
+                    dados_acao_tabela['Mínima'] = dados_acao_tabela['Mínima'].str.replace('.', ',')
+                    dados_acao_tabela['Mínima'] = dados_acao_tabela['Mínima'].replace('_', '.')
+                    
+                    dados_acao_tabela['Fechamento'] = pd.Series(["R$ {0: _.2f}".format(val) for val in dados_acao_tabela['Fechamento']], index = dados_acao_tabela.index)
+                    dados_acao_tabela['Fechamento'] = dados_acao_tabela['Fechamento'].astype(str)
+                    dados_acao_tabela['Fechamento'] = dados_acao_tabela['Fechamento'].str.replace('.', ',')
+                    dados_acao_tabela['Fechamento'] = dados_acao_tabela['Fechamento'].str.replace('_', '.')
+                    
+                    dados_acao_tabela['Fech. Ajustado'] = pd.Series(["R$ {0: _.2f}".format(val) for val in dados_acao_tabela['Fech. Ajustado']], index = dados_acao_tabela.index)
+                    dados_acao_tabela['Fech. Ajustado'] = dados_acao_tabela['Mínima'].astype(str)
+                    dados_acao_tabela['Fech. Ajustado'] = dados_acao_tabela['Mínima'].str.replace('.', ',')
+                    dados_acao_tabela['Fech. Ajustado'] = dados_acao_tabela['Mínima'].str.replace('_', '.')
+                    
+                    dados_acao_tabela['Volume'] = pd.Series(["R$ {0: _.2f}".format(val) for val in dados_acao_tabela['Volume']], index = dados_acao_tabela.index)
+                    dados_acao_tabela['Volume'] = dados_acao_tabela['Volume'].astype(str)
+                    dados_acao_tabela['Volume'] = dados_acao_tabela['Volume'].str.replace('.', ',')
+                    dados_acao_tabela['Volume'] = dados_acao_tabela['Volume'].str.replace('_', '.')
                 
                     dados_acao_tabela['Mínima %'] = pd.Series(["{0:.2f}%".format(val) for val in dados_acao_tabela['Mínima %']], index = dados_acao_tabela.index)
                     dados_acao_tabela['Mínima %'] = dados_acao_tabela['Mínima %'].astype(str)
@@ -372,12 +390,17 @@ if botao:
                 tabela_relatorio_venda['Resultado'] = pd.Series(["{0:.2f}%".format(val) for val in tabela_relatorio_venda['Resultado']], index = tabela_relatorio_venda.index)
                 tabela_relatorio_venda['Resultado'] = tabela_relatorio_venda['Resultado'].astype(str)
                 tabela_relatorio_venda['Resultado'] = tabela_relatorio_venda['Resultado'].str.replace('.', ',')
-                           
-                for i in tabela_relatorio_venda.index:
-                                    
-                    tabela_relatorio_venda.loc[i, 'Média do Volume no Período'] = locale.currency(tabela_relatorio_venda.at[i, 'Média do Volume no Período'], grouping=True)
-                    tabela_relatorio_venda.loc[i, 'Preço de Entrada'] = locale.currency(tabela_relatorio_venda.at[i, 'Preço de Entrada'], grouping=True)
                 
+                tabela_relatorio_venda['Média do Volume no Período'] = pd.Series(["R$ {0:_.2f}".format(val) for val in tabela_relatorio_venda['Média do Volume no Período']], index = tabela_relatorio_venda.index)
+                tabela_relatorio_venda['Média do Volume no Período'] = tabela_relatorio_venda['Média do Volume no Período'].astype(str)
+                tabela_relatorio_venda['Média do Volume no Período'] = tabela_relatorio_venda['Média do Volume no Período'].str.replace('.', ',')
+                tabela_relatorio_venda['Média do Volume no Período'] = tabela_relatorio_venda['Média do Volume no Período'].str.replace('_', '.')
+                
+                tabela_relatorio_venda['Preço de Entrada'] = pd.Series(["R$ {0: _.2f}".format(val) for val in tabela_relatorio_venda['Preço de Entrada']], index = tabela_relatorio_venda.index)
+                tabela_relatorio_venda['Preço de Entrada'] = tabela_relatorio_venda['Preço de Entrada'].astype(str)
+                tabela_relatorio_venda['Preço de Entrada'] = tabela_relatorio_venda['Preço de Entrada'].str.replace('.', ',')
+                tabela_relatorio_venda['Preço de Entrada'] = tabela_relatorio_venda['Preço de Entrada'].str.replace('_', '.')
+                                   
                 st.dataframe(tabela_relatorio_venda)
                     
         else:
@@ -387,10 +410,4 @@ if botao:
     else:
         
         st.sidebar.error("Selecione pelo menos uma ação!")
-
-
-# In[ ]:
-
-
-
 
