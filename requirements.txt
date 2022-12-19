@@ -2,5 +2,3 @@ streamlit
 pandas
 pandas-datareader
 yfinance
-tzdata==2022.7
-tzlocal==4.2
