@@ -66,7 +66,7 @@ else:
     
     else:
     
-        dataFinal = date.today() - timedelta(1)
+        dataFinal = date.today()
         
 #Cria a tabela de relatório
 tabela_relatorio_venda = pd.DataFrame()
