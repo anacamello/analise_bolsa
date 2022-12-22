@@ -24,6 +24,15 @@ acoes_lista = list(acoes_completo['Codigo'])
 
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
+def cor_ganho(val):
+    
+    val = str(val)
+    val = val.replace('%', '')
+    val = val.replace(',', '.')
+    cor_background = 'forestgreen' if float(val) > 75.00 else 'white'
+    cor_letra = 'white' if float(val) > 75.00 else 'black'
+    return f'background-color: {cor_background}; color:{cor_letra}'
+
 if 'tabs' not in st.session_state:    
     st.session_state['tabs'] = ['Consolidado']
 else:
@@ -229,7 +238,7 @@ if botao:
                             if(ganho>0.75):
 
                                 tabela_relatorio_venda = tabela_relatorio_venda.append({'Código': acao, 'Variação': variacao, 'Ganho': ganho, 'Média do Volume no Período': mediaVolume, 'Preço de Entrada': precoEntrada, 'Qtd. Trades': qtdTrades, 'Qtd. Trades Positivos': qtdTradesPositivos, 'Média dos Trades Positivos': mediaTradesPositivos, 'Maior Trade Positivo': maiorTradePositivo, 'Menor Trade Positivo': menorTradePositivo, 'Resultado': resultado}, ignore_index = True)
-
+                
                             variacao = round(variacao + 0.1, 2)
                             linha_tabela_resumo_acao +=1
 
@@ -261,6 +270,9 @@ if botao:
 
                         tabela_resumo_acao = tabela_resumo_acao.set_index('Variação')
                         tabela_resumo_acao = tabela_resumo_acao.T
+                        
+                        tabela_resumo_acao = tabela_resumo_acao.style.applymap(cor_ganho)
+                        
                         st.dataframe(tabela_resumo_acao)
 
                         #formata dados_acao_tabela
