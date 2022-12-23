@@ -235,7 +235,7 @@ if botao:
 
                             precoEntrada = ultimoFechamentoAjustado * (1+variacao/100)
 
-                            if(ganho>0.75):
+                            if(ganho>0.75  and mediaVolume > 100000): 
 
                                 tabela_relatorio_venda = tabela_relatorio_venda.append({'Código': acao, 'Variação': variacao, 'Ganho': ganho, 'Média do Volume no Período': mediaVolume, 'Preço de Entrada': precoEntrada, 'Qtd. Trades': qtdTrades, 'Qtd. Trades Positivos': qtdTradesPositivos, 'Média dos Trades Positivos': mediaTradesPositivos, 'Maior Trade Positivo': maiorTradePositivo, 'Menor Trade Positivo': menorTradePositivo, 'Resultado': resultado}, ignore_index = True)
                 
