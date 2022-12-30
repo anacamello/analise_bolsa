@@ -15,7 +15,6 @@ from datetime import timedelta
 import itertools
 import yfinance as yf
 from decimal import Decimal
-#from yahooquery import Ticker
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier 
 
@@ -357,6 +356,8 @@ def calcula_tendencia(modelo):
 
 acoes_completo = pd.read_csv('acoes.csv', sep=";")
 acoes_lista = list(acoes_completo['Codigo'])
+acoes_completo_indice = pd.DataFrame({'Codigo': acoes_completo['Codigo_Yahoo'], 'Indice_Bovespa': acoes_completo['Indice_Bovespa']})
+acoes_indice_bovespa = acoes_completo_indice.query("Indice_Bovespa=='Sim'")
 
 # Configura o front end
 
@@ -364,12 +365,12 @@ st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
 if 'tabs' not in st.session_state:    
 
-    st.session_state['tabs'] = ['Tendências de Subida', 'Tendências de Descida', 'Consolidado']
+    st.session_state['tabs'] = ['Tendências de Subida', 'Tendências de Descida', 'IBOVESPA - Tendências de Subida', 'IBOVESPA - Tendências de Descida', 'Consolidado']
 
 else:
     
     del st.session_state['tabs']
-    st.session_state['tabs'] = ['Tendências de Subida', 'Tendências de Descida', 'Consolidado']
+    st.session_state['tabs'] = ['Tendências de Subida', 'Tendências de Descida', 'IBOVESPA - Tendências de Subida', 'IBOVESPA - Tendências de Descida', 'Consolidado']
     
 st.title('Análise dados da Bolsa')
 
@@ -434,7 +435,7 @@ if botao:
                 
                 if(incluir_previsao_subida_descida):
                     
-                    qtdAbas = 2
+                    qtdAbas = 4
                     
                 else:
                     
@@ -451,7 +452,7 @@ if botao:
 
                     for acao in acoes_selecionadas:
 
-                        if(qtdAbas>2):
+                        if(qtdAbas>4):
 
                             del tabela_resumo_acao
 
@@ -593,7 +594,7 @@ if botao:
 
                 if(incluir_previsao_subida_descida):
                     
-                    num_aba = 2
+                    num_aba = 4
                     
                     modelo_treinado = treina_modelo()
                     tendencias = calcula_tendencia(modelo_treinado)
@@ -622,6 +623,52 @@ if botao:
                         tendencias_negativas['% Chances de acerto'] = tendencias_negativas['% Chances de acerto'].str.replace('.', ',')
                         
                         st.dataframe(tendencias_negativas) 
+                        
+                    with tabs[2]:
+                        
+                        tendencias_positivas_ibovespa = pd.DataFrame()
+                        tendencias_positivas_ibovespa.insert(0, "Ação", 0, allow_duplicates = False)
+                        tendencias_positivas_ibovespa.insert(1, "Previsão", 0, allow_duplicates = False)
+                        tendencias_positivas_ibovespa.insert(2, "% Chances de acerto", 0, allow_duplicates = False)
+                        
+                        linha_tendencias_positivas = 0
+                        
+                        for b in tendencias_positivas.index:
+                            
+                            acao_codigo = tendencias_positivas.at[b, 'Ação']
+                            
+                            if(acao_codigo in acoes_indice_bovespa.values):
+                                
+                                tendencias_positivas_ibovespa.at[linha_tendencias_positivas, 'Ação'] = tendencias_positivas.at[b, 'Ação']
+                                tendencias_positivas_ibovespa.at[linha_tendencias_positivas, 'Previsão'] = tendencias_positivas.at[b, 'Previsão']
+                                tendencias_positivas_ibovespa.at[linha_tendencias_positivas, '% Chances de acerto'] = tendencias_positivas.at[b, '% Chances de acerto']
+                                
+                                linha_tendencias_positivas += 1
+
+                        st.dataframe(tendencias_positivas_ibovespa) 
+                        
+                    with tabs[3]:
+                        
+                        tendencias_negativas_ibovespa = pd.DataFrame()
+                        tendencias_negativas_ibovespa.insert(0, "Ação", 0, allow_duplicates = False)
+                        tendencias_negativas_ibovespa.insert(1, "Previsão", 0, allow_duplicates = False)
+                        tendencias_negativas_ibovespa.insert(2, "% Chances de acerto", 0, allow_duplicates = False)
+                        
+                        linha_tendencias_negativas = 0
+                        
+                        for c in tendencias_negativas.index:
+                            
+                            acao_codigo = tendencias_negativas.at[c, 'Ação']
+                            
+                            if(acao_codigo in acoes_indice_bovespa.values):
+                                
+                                tendencias_negativas_ibovespa.at[linha_tendencias_negativas, 'Ação'] = tendencias_negativas.at[c, 'Ação']
+                                tendencias_negativas_ibovespa.at[linha_tendencias_negativas, 'Previsão'] = tendencias_negativas.at[c, 'Previsão']
+                                tendencias_negativas_ibovespa.at[linha_tendencias_negativas, '% Chances de acerto'] = tendencias_negativas.at[c, '% Chances de acerto']
+                                
+                                linha_tendencias_negativas += 1
+
+                        st.dataframe(tendencias_negativas_ibovespa) 
                     
                 else:
                     
