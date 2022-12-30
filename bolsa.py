@@ -15,7 +15,7 @@ from datetime import timedelta
 import itertools
 import yfinance as yf
 from decimal import Decimal
-from yahooquery import Ticker
+#from yahooquery import Ticker
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier 
 
