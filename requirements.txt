@@ -2,5 +2,4 @@ streamlit
 pandas
 pandas-datareader
 yfinance
-sklearn.model_selection
-sklearn.ensemble
+scikit-learn==0.24.2
