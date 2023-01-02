@@ -299,10 +299,23 @@ def calcula_tendencia(modelo):
 
                 for j in dados_acao.index:
                     
-                    dados_acao_filtrado.at[j, 'Distancia_Maxima_Minima'] = (dados_acao_filtrado.at[j, 'Máxima'] / dados_acao_filtrado.at[j, 'Mínima'])-1
-                    dados_acao_filtrado.at[j, 'Distancia_Abertura_Minima'] = (dados_acao_filtrado.at[j, 'Mínima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
-                    dados_acao_filtrado.at[j, 'Distancia_Abertura_Maxima'] = (dados_acao_filtrado.at[j, 'Máxima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
-            
+                    if(dados_acao_filtrado.at[j, 'Mínima'] != 0):
+                    
+                        dados_acao_filtrado.at[j, 'Distancia_Maxima_Minima'] = (dados_acao_filtrado.at[j, 'Máxima'] / dados_acao_filtrado.at[j, 'Mínima'])-1
+                        
+                    else:
+                        
+                        dados_acao_filtrado.at[j, 'Distancia_Maxima_Minima'] = 0
+                    
+                    if(dados_acao_filtrado.at[j, 'Abertura'] != 0):
+                        
+                        dados_acao_filtrado.at[j, 'Distancia_Abertura_Minima'] = (dados_acao_filtrado.at[j, 'Mínima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
+                        dados_acao_filtrado.at[j, 'Distancia_Abertura_Maxima'] = (dados_acao_filtrado.at[j, 'Máxima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
+                        
+                    else:
+                        
+                        dados_acao_filtrado.at[j, 'Distancia_Abertura_Minima'] = 0
+                        dados_acao_filtrado.at[j, 'Distancia_Abertura_Maxima'] = 0
                     data_string = str(dados_acao.at[j, 'Date'])
                     ano = data_string[0:4]
                     mes = data_string[5:7]
