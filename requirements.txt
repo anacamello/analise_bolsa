@@ -3,3 +3,4 @@ pandas
 pandas-datareader
 yfinance
 scikit-learn
+plotly
