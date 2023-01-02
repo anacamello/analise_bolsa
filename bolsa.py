@@ -18,7 +18,6 @@ from decimal import Decimal
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier 
 import plotly.graph_objects as go
-from statistics import median
 
 
 # In[4]:
@@ -278,13 +277,14 @@ def calcula_tendencia(modelo):
     
         else:
     
-            if(hoje.hour > 18 and hoje.minute >= 30):
+            if(hoje.hour > 18 or (hoje.hour == 18 and hoje.minute >= 30)):
         
                 dataFinal = date.today() + timedelta(1)
     
             else:
     
                 dataFinal = date.today()
+        
         
         linha = 0
 
@@ -331,15 +331,15 @@ def calcula_tendencia(modelo):
 
                     dados_acao_filtrado.at[j, 'Dia_Semana'] = data.isoweekday() 
 
-                for i in dados_acao_filtrado.index:
+                for k in dados_acao_filtrado.index:
 
-                    if(j>0):
+                    if(k>0):
 
-                        dados_acao_filtrado.at[j, 'Tendencia_Anterior'] = dados_acao_filtrado.at[j-1, 'Aumento_Preco']
+                        dados_acao_filtrado.at[k, 'Tendencia_Anterior'] = dados_acao_filtrado.at[k-1, 'Aumento_Preco']
 
                     else:
 
-                        dados_acao_filtrado.at[j, 'Tendencia_Anterior'] = 0
+                        dados_acao_filtrado.at[k, 'Tendencia_Anterior'] = 0
 
                 dados_acao_filtrado = pd.DataFrame({'open': dados_acao_filtrado['Abertura'], 'volume': dados_acao_filtrado['Volume'], 'high': dados_acao_filtrado['Máxima'], 'close': dados_acao_filtrado['Fechamento'], 'low': dados_acao_filtrado['Mínima'], 'Distancia_Maxima_Minima':dados_acao_filtrado['Distancia_Maxima_Minima'], 'Distancia_Abertura_Minima':dados_acao_filtrado['Distancia_Abertura_Minima'], 'Distancia_Abertura_Maxima':dados_acao_filtrado['Distancia_Abertura_Maxima'],'Tendencia_Anterior': dados_acao_filtrado['Tendencia_Anterior'], 'Variacao_Periodo_Anterior': dados_acao_filtrado['Variacao_Periodo_Anterior'], 'Dia_Semana': dados_acao_filtrado['Dia_Semana']})
                 dados_acao_filtrado = dados_acao_filtrado.dropna(axis=0)
@@ -399,7 +399,7 @@ def calcula_medianas():
     
         else:
     
-            if(hoje.hour > 18 and hoje.minute >= 30):
+            if(hoje.hour > 18 or (hoje.hour == 18 and hoje.minute >= 30)):
         
                 dataFinal = date.today() + timedelta(1)
     
@@ -501,7 +501,7 @@ if(hoje.hour < 18):
     
 else:
     
-    if(hoje.hour > 18 and hoje.minute >= 30):
+    if(hoje.hour > 18 or (hoje.hour == 18 and hoje.minute >= 30)):
         
         dataFinal = date.today() + timedelta(1)
     
