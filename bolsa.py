@@ -17,6 +17,7 @@ import yfinance as yf
 from decimal import Decimal
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier 
+import plotly.graph_objects as go
 
 
 # In[4]:
@@ -210,11 +211,17 @@ def cor_ganho(val):
 # In[9]:
 
 
-def treina_modelo():
+def treina_modelo(opcoes_dados_selecionados):
+    
+    if(opcoes_dados_selecionados == 0):
+        
+        acoes_historico = pd.read_csv('dados_historicos.csv', sep=",")
+        
+    else:
+        
+        acoes_historico = pd.read_csv('dados_historicos_bovespa.csv', sep=",")
     
     with st.spinner('Treinando Modelo. Aguarde...'):
-    
-        acoes_historico = pd.read_csv('dados_historicos.csv', sep=",")
 
         #Cria uma massa de dados com os dados de todas as ações
 
@@ -227,8 +234,14 @@ def treina_modelo():
 
         X_train_completo, X_test_completo, Y_train_completo, Y_test_completo = train_test_split(X_completo, Y_completo, test_size = 0.2)
 
-        # Instânciando a árvore de decisão
-        modelo = RandomForestClassifier(criterion='gini', max_depth = 100, max_leaf_nodes = 500, min_samples_leaf = 100, min_samples_split = 100, n_estimators = 10)
+        if(opcoes_dados_selecionados == 0):
+        
+            # Instânciando a árvore de decisão
+            modelo = RandomForestClassifier(criterion='entropy', max_depth = 100, max_leaf_nodes = 10, min_samples_leaf = 5, min_samples_split = 10, n_estimators = 10)
+            
+        else:
+            
+            modelo = RandomForestClassifier(criterion='gini', max_depth = 500, max_leaf_nodes = 5, min_samples_leaf = 50, min_samples_split = 100, n_estimators = 50)
 
         # Treinando o modelo de arvore de decisão
         modelo = modelo.fit(X_train_completo, Y_train_completo)
@@ -328,14 +341,17 @@ def calcula_tendencia(modelo):
                         dados_acao_filtrado.at[j, 'Tendencia_Anterior'] = 0
 
                 dados_acao_filtrado = pd.DataFrame({'open': dados_acao_filtrado['Abertura'], 'volume': dados_acao_filtrado['Volume'], 'high': dados_acao_filtrado['Máxima'], 'close': dados_acao_filtrado['Fechamento'], 'low': dados_acao_filtrado['Mínima'], 'Distancia_Maxima_Minima':dados_acao_filtrado['Distancia_Maxima_Minima'], 'Distancia_Abertura_Minima':dados_acao_filtrado['Distancia_Abertura_Minima'], 'Distancia_Abertura_Maxima':dados_acao_filtrado['Distancia_Abertura_Maxima'],'Tendencia_Anterior': dados_acao_filtrado['Tendencia_Anterior'], 'Variacao_Periodo_Anterior': dados_acao_filtrado['Variacao_Periodo_Anterior'], 'Dia_Semana': dados_acao_filtrado['Dia_Semana']})
+                dados_acao_filtrado = dados_acao_filtrado.dropna(axis=0)
                 dados_acao_filtrado = dados_acao_filtrado.reset_index(drop=True)
+                
+                if(len(dados_acao_filtrado) > 0):
 
-                dados_acao_filtrado = dados_acao_filtrado.iloc[-1]
-                dados_acao_filtrado_array = np.array(dados_acao_filtrado)
-                dados_acao_filtrado_array.reshape(-1, 1)
-
-                previsao = modelo.predict([dados_acao_filtrado_array])
-                previsao_percentual = modelo.predict_proba([dados_acao_filtrado_array])
+                    dados_acao_filtrado = dados_acao_filtrado.iloc[-1]
+                    dados_acao_filtrado_array = np.array(dados_acao_filtrado)
+                    dados_acao_filtrado_array.reshape(-1, 1)
+                
+                    previsao = modelo.predict([dados_acao_filtrado_array])
+                    previsao_percentual = modelo.predict_proba([dados_acao_filtrado_array])
 
             dados_consolidados.at[linha, "Acao"] = codigo
             dados_consolidados.at[linha, "Previsao"] = previsao[0]
@@ -354,6 +370,57 @@ def calcula_tendencia(modelo):
 # In[ ]:
 
 
+#def calcula_medianas():
+
+#    with st.spinner('Calculando as medianas. Aguarde...'):
+        
+#        acoes_completo = pd.read_csv('acoes.csv', sep=";") 
+#        codigos = pd.DataFrame(acoes_completo['Codigo_Yahoo']) 
+        
+#        dataInicial = date.today() - timedelta(251)
+
+#        hoje = dt.datetime.now()
+
+#        if(hoje.hour < 18):
+    
+#            dataFinal = date.today()
+    
+#        else:
+    
+#            if(hoje.hour > 18 and hoje.minute >= 30):
+        
+#                dataFinal = date.today() + timedelta(1)
+    
+#            else:
+    
+#                dataFinal = date.today()
+        
+#        linha = 0
+        
+#        for i in codigos.index:
+        
+#            codigo_yahoo = codigos.at[i, 'Codigo_Yahoo']
+#            codigo = codigos.at[i, 'Codigo']
+#            dados_acao = yf.download(codigo_yahoo, dataInicial, dataFinal)
+#            dados_acao = dados_acao.reset_index()
+#            dados_acao_filtrado = pd.DataFrame({'Ação': codigo, 'Abertura': dados_acao['Open'], 'Volume': dados_acao['Volume'], 'Máxima': dados_acao['High'], 'Fechamento': dados_acao['Adj Close'], 'Mínima': dados_acao['Low']})
+            
+#            if(len(dados_acao) > 0):
+
+#                for j in dados_acao.index:
+                    
+#                    dados_acao_filtrado.at[j, 'Subida'] = (dados_acao_filtrado.at[j, 'Máxima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
+#                    dados_acao_filtrado.at[j, 'Descida'] = (dados_acao_filtrado.at[j, 'Mínima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
+                    
+
+#    st.sidebar.success('Medianas calculadas.')
+    
+#    return medianas
+
+
+# In[ ]:
+
+
 acoes_completo = pd.read_csv('acoes.csv', sep=";")
 acoes_lista = list(acoes_completo['Codigo'])
 acoes_completo_indice = pd.DataFrame({'Codigo': acoes_completo['Codigo_Yahoo'], 'Indice_Bovespa': acoes_completo['Indice_Bovespa']})
@@ -365,12 +432,12 @@ st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
 if 'tabs' not in st.session_state:    
 
-    st.session_state['tabs'] = ['Tendências de Subida', 'Tendências de Descida', 'IBOVESPA - Tendências de Subida', 'IBOVESPA - Tendências de Descida', 'Consolidado']
+    st.session_state['tabs'] = ['Tendências de Subida', 'Tendências de Descida', 'IBOVESPA - Tendências de Subida', 'IBOVESPA - Tendências de Descida', 'IBOVESPA - Indicadores',  'Consolidado']
 
 else:
     
     del st.session_state['tabs']
-    st.session_state['tabs'] = ['Tendências de Subida', 'Tendências de Descida', 'IBOVESPA - Tendências de Subida', 'IBOVESPA - Tendências de Descida', 'Consolidado']
+    st.session_state['tabs'] = ['Tendências de Subida', 'Tendências de Descida', 'IBOVESPA - Tendências de Subida', 'IBOVESPA - Tendências de Descida', 'IBOVESPA - Indicadores', 'Consolidado']
     
 st.title('Análise dados da Bolsa')
 
@@ -385,6 +452,10 @@ variacao_max = st.sidebar.number_input('Variação Máxima:')
 
 incluir_previsao_subida_descida = st.sidebar.checkbox("Incluir relatórios de tendências.")
 
+if(incluir_previsao_subida_descida):
+    
+    opcoes_dados = st.sidebar.radio('Selecione os dados para treinar o modelo:', ('Todas as ações', 'Apenas ações do índice Bovespa'))
+    
 botao = st.sidebar.button('Calcular')
 
 #Cria as abas
@@ -424,7 +495,7 @@ tabela_relatorio_venda.insert(7, "Média dos Trades Positivos", 0, allow_duplica
 tabela_relatorio_venda.insert(8, "Maior Trade Positivo", 0, allow_duplicates = False)
 tabela_relatorio_venda.insert(9, "Menor Trade Positivo", 0, allow_duplicates = False)
 tabela_relatorio_venda.insert(10, "Resultado", 0, allow_duplicates = False)
-
+    
 if botao:   
     
     if(len(acoes_selecionadas)> 0):
@@ -435,12 +506,22 @@ if botao:
                 
                 if(incluir_previsao_subida_descida):
                     
-                    qtdAbas = 4
+    
+                    if(opcoes_dados == 'Apenas ações do índice Bovespa'):
                     
+                        del st.session_state['tabs']
+                        st.session_state['tabs'] = ['IBOVESPA - Tendências de Subida', 'IBOVESPA - Tendências de Descida', 'IBOVESPA - Indicadores', 'Consolidado']
+                        qtdAbas = 3
+                        
+                    else:
+                        
+                        qtdAbas = 5
+                        
                 else:
                     
                     del st.session_state['tabs']
                     st.session_state['tabs'] = ['Consolidado']
+                    qtdAbas = 0
     
                 for acao in acoes_selecionadas:
 
@@ -452,7 +533,7 @@ if botao:
 
                     for acao in acoes_selecionadas:
 
-                        if(qtdAbas>4):
+                        if(qtdAbas>5):
 
                             del tabela_resumo_acao
 
@@ -592,89 +673,128 @@ if botao:
                             
                     st.sidebar.success('Dados analisados!')
 
+                qtdAbas = 0
+                
                 if(incluir_previsao_subida_descida):
                     
-                    num_aba = 4
+                    if(opcoes_dados == 'Todas as ações'):
+                        
+                        opcoes_dados_selecionados = 0
+                            
+                    else:
+                        
+                        opcoes_dados_selecionados = 1
+                        
+                    modelo_treinado = treina_modelo(opcoes_dados_selecionados)
                     
-                    modelo_treinado = treina_modelo()
                     tendencias = calcula_tendencia(modelo_treinado)
                     
-                    with tabs[0]:
-                        
-                        tendencias_positivas = tendencias.query("Previsao==1.0")
-                        tendencias_positivas = pd.DataFrame({'Ação': tendencias_positivas['Acao'], 'Previsão' : 'Subida', '% Chances de acerto': tendencias_positivas['Chances Subida %']})
-                        
-                        tendencias_positivas['% Chances de acerto'] = pd.Series(["{0:.2f}%".format(val*100) for val in tendencias_positivas['% Chances de acerto']], index = tendencias_positivas.index)
-                        tendencias_positivas['% Chances de acerto'] = tendencias_positivas['% Chances de acerto'].astype(str)
-                        tendencias_positivas['% Chances de acerto'] = tendencias_positivas['% Chances de acerto'].str.replace('.', ',')
+                    tendencias_positivas = tendencias.query("Previsao==1.0")
+                    tendencias_positivas = pd.DataFrame({'Ação': tendencias_positivas['Acao'], 'Previsão' : 'Subida', 'Chances de acerto': tendencias_positivas['Chances Subida %']})
+                    tendencias_positivas = tendencias_positivas.reset_index(drop = True)
+                    
+                    tendencias_positivas['Chances de acerto'] = pd.Series(["{0:.2f}%".format(val*100) for val in tendencias_positivas['Chances de acerto']], index = tendencias_positivas.index)
+                    tendencias_positivas['Chances de acerto'] = tendencias_positivas['Chances de acerto'].astype(str)
+                    tendencias_positivas['Chances de acerto'] = tendencias_positivas['Chances de acerto'].str.replace('.', ',')
 
-                        tendencias_positivas = tendencias_positivas.reset_index(drop = True)
+                    
+                    tendencias_negativas = tendencias.query("Previsao==0.0")
+                    tendencias_negativas = pd.DataFrame({'Ação': tendencias_negativas['Acao'], 'Previsão' : 'Descida', 'Chances de acerto': tendencias_negativas['Chances Descida %']})
+                    tendencias_negativas = tendencias_negativas.reset_index(drop = True)
+                    
+                    tendencias_negativas['Chances de acerto'] = pd.Series(["{0:.2f}%".format(val*100) for val in tendencias_negativas['Chances de acerto']], index = tendencias_negativas.index)
+                    tendencias_negativas['Chances de acerto'] = tendencias_negativas['Chances de acerto'].astype(str)
+                    tendencias_negativas['Chances de acerto'] = tendencias_negativas['Chances de acerto'].str.replace('.', ',')
+
+                    if (opcoes_dados == 'Todas as ações'):
                         
-                        st.dataframe(tendencias_positivas)
+                        with tabs[qtdAbas]:
+
+                            st.dataframe(tendencias_positivas)
+
+                            qtdAbas = qtdAbas + 1
+
+                        with tabs[qtdAbas]:
+
+                            st.dataframe(tendencias_negativas) 
+
+                            qtdAbas = qtdAbas + 1
                         
-                    with tabs[1]:
-                        
-                        tendencias_negativas = tendencias.query("Previsao==0.0")
-                        tendencias_negativas = pd.DataFrame({'Ação': tendencias_negativas['Acao'], 'Previsão' : 'Descida', '% Chances de acerto': tendencias_negativas['Chances Descida %']})
-                        tendencias_negativas = tendencias_negativas.reset_index(drop = True)
-                        
-                        tendencias_negativas['% Chances de acerto'] = pd.Series(["{0:.2f}%".format(val*100) for val in tendencias_negativas['% Chances de acerto']], index = tendencias_negativas.index)
-                        tendencias_negativas['% Chances de acerto'] = tendencias_negativas['% Chances de acerto'].astype(str)
-                        tendencias_negativas['% Chances de acerto'] = tendencias_negativas['% Chances de acerto'].str.replace('.', ',')
-                        
-                        st.dataframe(tendencias_negativas) 
-                        
-                    with tabs[2]:
-                        
+                    with tabs[qtdAbas]:
+
                         tendencias_positivas_ibovespa = pd.DataFrame()
                         tendencias_positivas_ibovespa.insert(0, "Ação", 0, allow_duplicates = False)
                         tendencias_positivas_ibovespa.insert(1, "Previsão", 0, allow_duplicates = False)
-                        tendencias_positivas_ibovespa.insert(2, "% Chances de acerto", 0, allow_duplicates = False)
-                        
+                        tendencias_positivas_ibovespa.insert(2, "Chances de acerto", 0, allow_duplicates = False)
+
                         linha_tendencias_positivas = 0
-                        
+
                         for b in tendencias_positivas.index:
-                            
+
                             acao_codigo = tendencias_positivas.at[b, 'Ação']
-                            
+
                             if(acao_codigo in acoes_indice_bovespa.values):
-                                
+
                                 tendencias_positivas_ibovespa.at[linha_tendencias_positivas, 'Ação'] = tendencias_positivas.at[b, 'Ação']
                                 tendencias_positivas_ibovespa.at[linha_tendencias_positivas, 'Previsão'] = tendencias_positivas.at[b, 'Previsão']
-                                tendencias_positivas_ibovespa.at[linha_tendencias_positivas, '% Chances de acerto'] = tendencias_positivas.at[b, '% Chances de acerto']
-                                
+                                tendencias_positivas_ibovespa.at[linha_tendencias_positivas, 'Chances de acerto'] = tendencias_positivas.at[b, 'Chances de acerto']
+
                                 linha_tendencias_positivas += 1
 
+                        qtd_tendencias_positivas_ibovespa = len(tendencias_positivas_ibovespa)
                         st.dataframe(tendencias_positivas_ibovespa) 
-                        
-                    with tabs[3]:
-                        
-                        tendencias_negativas_ibovespa = pd.DataFrame()
-                        tendencias_negativas_ibovespa.insert(0, "Ação", 0, allow_duplicates = False)
-                        tendencias_negativas_ibovespa.insert(1, "Previsão", 0, allow_duplicates = False)
-                        tendencias_negativas_ibovespa.insert(2, "% Chances de acerto", 0, allow_duplicates = False)
-                        
-                        linha_tendencias_negativas = 0
-                        
-                        for c in tendencias_negativas.index:
-                            
-                            acao_codigo = tendencias_negativas.at[c, 'Ação']
-                            
-                            if(acao_codigo in acoes_indice_bovespa.values):
-                                
-                                tendencias_negativas_ibovespa.at[linha_tendencias_negativas, 'Ação'] = tendencias_negativas.at[c, 'Ação']
-                                tendencias_negativas_ibovespa.at[linha_tendencias_negativas, 'Previsão'] = tendencias_negativas.at[c, 'Previsão']
-                                tendencias_negativas_ibovespa.at[linha_tendencias_negativas, '% Chances de acerto'] = tendencias_negativas.at[c, '% Chances de acerto']
-                                
-                                linha_tendencias_negativas += 1
 
-                        st.dataframe(tendencias_negativas_ibovespa) 
+                        qtdAbas = qtdAbas + 1
+
+                        with tabs[qtdAbas]:
+
+                            tendencias_negativas_ibovespa = pd.DataFrame()
+                            tendencias_negativas_ibovespa.insert(0, "Ação", 0, allow_duplicates = False)
+                            tendencias_negativas_ibovespa.insert(1, "Previsão", 0, allow_duplicates = False)
+                            tendencias_negativas_ibovespa.insert(2, "Chances de acerto", 0, allow_duplicates = False)
+
+                            linha_tendencias_negativas = 0
+
+                            for c in tendencias_negativas.index:
+
+                                acao_codigo = tendencias_negativas.at[c, 'Ação']
+
+                                if(acao_codigo in acoes_indice_bovespa.values):
+
+                                    tendencias_negativas_ibovespa.at[linha_tendencias_negativas, 'Ação'] = tendencias_negativas.at[c, 'Ação']
+                                    tendencias_negativas_ibovespa.at[linha_tendencias_negativas, 'Previsão'] = tendencias_negativas.at[c, 'Previsão']
+                                    tendencias_negativas_ibovespa.at[linha_tendencias_negativas, 'Chances de acerto'] = tendencias_negativas.at[c, 'Chances de acerto']
+
+                                    linha_tendencias_negativas += 1
+                                    
+                            qtd_tendencias_negativas_ibovespa = len(tendencias_negativas_ibovespa)
+                            st.dataframe(tendencias_negativas_ibovespa) 
+                            
+                            qtdAbas = qtdAbas + 1
+                            
+                        with tabs[qtdAbas]:
+
+                            percentual_subida_ibovespa = qtd_tendencias_positivas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)
+                            percentual_descida_ibovespa = qtd_tendencias_negativas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)
+                            
+                            if(percentual_subida_ibovespa> percentual_descida_ibovespa):
+                                
+                                st.metric("Tendência da Bolsa:", "Subida", percentual_subida_ibovespa * 100)
+                                
+                            else:
+                                
+                                st.metric("Tendência da Bolsa:", "Descida", percentual_descida_ibovespa * -100)
+
+                            fig = go.Figure()
+                            fig.add_trace(go.Bar(y=[''], x=[percentual_subida_ibovespa], name='Subida', orientation='h', marker=dict(color='rgba(19, 141, 19, 1.0)', line=dict(color='rgba(19, 141, 19, 1.0)', width=3)))) 
+                            fig.add_trace(go.Bar(y=[''], x=[percentual_descida_ibovespa], name='Descida', orientation='h', marker=dict(color='rgba(195, 11, 20, 1.0)', line=dict(color='rgba(195, 11, 20, 1.0)', width=3))))                                                                                                                                  
+                            fig.update_layout(barmode='stack', autosize = False, width=1000, height=220)
+                            
+                            st.plotly_chart(fig, theme="streamlit")
+                            
+                            qtdAbas = qtdAbas + 1
                     
-                else:
-                    
-                    num_aba = 0
-                    
-                with tabs[num_aba]:
+                with tabs[qtdAbas]:
 
                     num_linha = 0
 
@@ -716,6 +836,7 @@ if botao:
                     tabela_relatorio_venda = formata_tabela_relatorio_venda(tabela_relatorio_venda)
                     
                     st.dataframe(tabela_relatorio_venda)
+    
                     
             else:
                     
