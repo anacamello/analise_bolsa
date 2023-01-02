@@ -3,4 +3,4 @@ pandas
 pandas-datareader
 yfinance
 scikit-learn
-plotly
+plotly.graph_objects
