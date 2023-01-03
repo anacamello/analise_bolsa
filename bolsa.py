@@ -504,8 +504,6 @@ qtdAbas = 0
 
 yf.pdr_override() 
 
-dataInicial = date.today() - timedelta(5)
-
 hoje = dt.datetime.now()
 
 if(hoje.hour < 18):
@@ -830,19 +828,19 @@ if botao:
                             
                         with tabs[qtdAbas]:
 
-                            percentual_subida_ibovespa = qtd_tendencias_positivas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)
-                            percentual_descida_ibovespa = qtd_tendencias_negativas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)
+                            percentual_subida_ibovespa = (qtd_tendencias_positivas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *100
+                            percentual_descida_ibovespa = (qtd_tendencias_negativas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *-100
                             
                             if(percentual_subida_ibovespa> percentual_descida_ibovespa):
                                 
-                                st.metric("Tendência da Bolsa:", "Subida", percentual_subida_ibovespa * 100)
+                                st.metric("Tendência da Bolsa:", "Subida", percentual_subida_ibovespa)
                                 
                             else:
                                 
-                                st.metric("Tendência da Bolsa:", "Descida", percentual_descida_ibovespa * -100)
+                                st.metric("Tendência da Bolsa:", "Descida", percentual_descida_ibovespa)
 
                             fig = go.Figure()
-                            fig.add_trace(go.Bar(y=[''], x=[percentual_subida_ibovespa]*100, name='Subida', orientation='h', marker=dict(color='rgba(19, 141, 19, 1.0)', line=dict(color='rgba(19, 141, 19, 1.0)', width=3)))) 
+                            fig.add_trace(go.Bar(y=[''], x=[percentual_subida_ibovespa], name='Subida', orientation='h', marker=dict(color='rgba(19, 141, 19, 1.0)', line=dict(color='rgba(19, 141, 19, 1.0)', width=3)))) 
                             fig.add_trace(go.Bar(y=[''], x=[percentual_descida_ibovespa]*100, name='Descida', orientation='h', marker=dict(color='rgba(195, 11, 20, 1.0)', line=dict(color='rgba(195, 11, 20, 1.0)', width=3))))                                                                                                                                  
                             fig.update_layout(barmode='stack', autosize = False, width=1000, height=220)
                             
