@@ -592,8 +592,8 @@ if botao:
 
                                 if(linha > 0):
 
-                                    dados_acao_tabela.loc[linha, 'Mínima %'] = (dados_acao_tabela.at[linha - 1, 'Fech. Ajustado'] - dados_acao_tabela.at[linha, 'Mínima'])/dados_acao_tabela.at[linha - 1, 'Fech. Ajustado']*-100
-                                    dados_acao_tabela.loc[linha, 'Fechamento %'] = (dados_acao_tabela.at[linha - 1, 'Fech. Ajustado'] - dados_acao_tabela.at[linha, 'Fech. Ajustado'])/dados_acao_tabela.at[linha - 1, 'Fech. Ajustado']*-100
+                                    dados_acao_tabela.loc[linha, 'Mínima %'] = (dados_acao_tabela.at[linha - 1, 'Fechamento'] - dados_acao_tabela.at[linha, 'Mínima'])/dados_acao_tabela.at[linha - 1, 'Fechamento']*-100
+                                    dados_acao_tabela.loc[linha, 'Fechamento %'] = (dados_acao_tabela.at[linha - 1, 'Fechamento'] - dados_acao_tabela.at[linha, 'Fechamento'])/dados_acao_tabela.at[linha - 1, 'Fechamento']*-100
 
                                 else:
 
@@ -602,7 +602,7 @@ if botao:
 
                             else:
 
-                                ultimoFechamentoAjustado = dados_acao_tabela.loc[linha, 'Fech. Ajustado'] 
+                                ultimoFechamentoAjustado = dados_acao_tabela.loc[linha, 'Fechamento'] 
 
                             variacao = round(variacao_min, 2)
                             coluna = 9
