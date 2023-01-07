@@ -1048,14 +1048,14 @@ if botao:
 
                             fig = go.Figure()
                             fig.add_trace(go.Bar(y=['Tendência de Máxima > Fechamento Dia Anterior'], x=[percentual_subida_ibovespa], name='Subida', orientation='h', marker=dict(color='rgba(19, 141, 19, 1.0)', line=dict(color='rgba(19, 141, 19, 1.0)', width=3)))) 
-                            fig.add_trace(go.Bar(y=['Tendência de Máxima > Fechamento Dia Anterior'], x=[percentual_descida_ibovespa], name='Descida', orientation='h', marker=dict(color='rgba(195, 11, 20, 1.0)', line=dict(color='rgba(195, 11, 20, 1.0)', width=3))))                                                                                                                                  
+                            fig.add_trace(go.Bar(y=['Tendência de Máxima > Fechamento Dia Anterior'], x=[percentual_descida_ibovespa*-1], name='Descida', orientation='h', marker=dict(color='rgba(195, 11, 20, 1.0)', line=dict(color='rgba(195, 11, 20, 1.0)', width=3))))                                                                                                                                  
                             fig.update_layout(barmode='stack', autosize = False, width=1000, height=220)
                             
                             st.plotly_chart(fig, theme="streamlit")
                             
                             fig = go.Figure()
                             fig.add_trace(go.Bar(y=['Tendência de Fechamento do Dia > Fechamento Dia Anterior'], x=[percentual_subida_ibovespa_fechamento], name='Subida', orientation='h', marker=dict(color='rgba(19, 141, 19, 1.0)', line=dict(color='rgba(19, 141, 19, 1.0)', width=3)))) 
-                            fig.add_trace(go.Bar(y=['Tendência de Fechamento do Dia > Fechamento Dia Anterior'], x=[percentual_descida_ibovespa_fechamento], name='Descida', orientation='h', marker=dict(color='rgba(195, 11, 20, 1.0)', line=dict(color='rgba(195, 11, 20, 1.0)', width=3))))                                                                                                                                  
+                            fig.add_trace(go.Bar(y=['Tendência de Fechamento do Dia > Fechamento Dia Anterior'], x=[percentual_descida_ibovespa_fechamento*-1], name='Descida', orientation='h', marker=dict(color='rgba(195, 11, 20, 1.0)', line=dict(color='rgba(195, 11, 20, 1.0)', width=3))))                                                                                                                                  
                             fig.update_layout(barmode='stack', autosize = False, width=1000, height=220)
                             
                             st.plotly_chart(fig, theme="streamlit")
