@@ -632,7 +632,7 @@ if 'tabs' not in st.session_state:
 else:
     
     del st.session_state['tabs']
-    st.session_state['tabs'] = ['Tendências de Subida', 'Tendências de Descida', 'IBOVESPA - Tendências de Subida - Fechamento', 'IBOVESPA - Tendências de Descida - Fechamento', 'IBOVESPA - Tendências de Subida', 'IBOVESPA - Tendências de Descida', 'IBOVESPA - Indicadores', 'Consolidado']
+    st.session_state['tabs'] = ['Tendências de Subida - Máxima', 'Tendências de Descida - Máxima', 'IBOVESPA - Tendências de Subida - Fechamento', 'IBOVESPA - Tendências de Descida - Fechamento', 'IBOVESPA - Tendências de Subida - Máxima', 'IBOVESPA - Tendências de Descida - Máxima', 'IBOVESPA - Indicadores', 'Consolidado']
     
 st.title('Análise dados da Bolsa')
 
@@ -1032,11 +1032,11 @@ if botao:
                             
                             if(percentual_subida_ibovespa> percentual_descida_ibovespa):
                                 
-                                st.metric("Tendência de Alta > Fechamento Dia Anterior:", "Subida", percentual_subida_ibovespa)
+                                st.metric("Tendência de Máxima > Fechamento Dia Anterior:", "Subida", percentual_subida_ibovespa)
                                 
                             else:
                                 
-                                st.metric("Tendência de Alta > Fechamento Dia Anterior:", "Descida", percentual_descida_ibovespa)
+                                st.metric("Tendência de Máxima > Fechamento Dia Anterior:", "Descida", percentual_descida_ibovespa)
                                 
                             if(percentual_subida_ibovespa_fechamento> percentual_descida_ibovespa_fechamento):
                                 
@@ -1047,8 +1047,8 @@ if botao:
                                 st.metric("Tendência de Fechamento do Dia > Fechamento Dia Anterior: da Bolsa:", "Descida", percentual_descida_ibovespa_fechamento)
 
                             fig = go.Figure()
-                            fig.add_trace(go.Bar(y=['Tendência de Alta > Fechamento Dia Anterior'], x=[percentual_subida_ibovespa], name='Subida', orientation='h', marker=dict(color='rgba(19, 141, 19, 1.0)', line=dict(color='rgba(19, 141, 19, 1.0)', width=3)))) 
-                            fig.add_trace(go.Bar(y=['Tendência de Alta > Fechamento Dia Anterior'], x=[percentual_descida_ibovespa]*100, name='Descida', orientation='h', marker=dict(color='rgba(195, 11, 20, 1.0)', line=dict(color='rgba(195, 11, 20, 1.0)', width=3))))                                                                                                                                  
+                            fig.add_trace(go.Bar(y=['Tendência de Máxima > Fechamento Dia Anterior'], x=[percentual_subida_ibovespa], name='Subida', orientation='h', marker=dict(color='rgba(19, 141, 19, 1.0)', line=dict(color='rgba(19, 141, 19, 1.0)', width=3)))) 
+                            fig.add_trace(go.Bar(y=['Tendência de Máxima > Fechamento Dia Anterior'], x=[percentual_descida_ibovespa]*100, name='Descida', orientation='h', marker=dict(color='rgba(195, 11, 20, 1.0)', line=dict(color='rgba(195, 11, 20, 1.0)', width=3))))                                                                                                                                  
                             fig.update_layout(barmode='stack', autosize = False, width=1000, height=220)
                             
                             st.plotly_chart(fig, theme="streamlit")
