@@ -1017,11 +1017,8 @@ if botao:
                             
                         with tabs[qtdAbas]:
                             
-                            qtd_tendencias_positivas_ibovespa_fechamento = len(tendencias_positivas_fechamento)
-                            qtd_tendencias_negativas_ibovespa_fechamento = len(tendencias_negativas_fechamento)
-                            
-                            st.text(qtd_tendencias_positivas_ibovespa_fechamento)
-                            st.text(qtd_tendencias_negativas_ibovespa_fechamento)
+                            qtd_tendencias_positivas_ibovespa_fechamento = int(len(tendencias_positivas_fechamento))
+                            qtd_tendencias_negativas_ibovespa_fechamento = int(len(tendencias_negativas_fechamento))
                             
                             if((qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento) > 0):
                                 
