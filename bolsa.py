@@ -1020,11 +1020,18 @@ if botao:
                             qtd_tendencias_positivas_ibovespa_fechamento = len(tendencias_positivas_fechamento)
                             qtd_tendencias_negativas_ibovespa_fechamento = len(tendencias_negativas_fechamento)
                             
-                            percentual_subida_ibovespa_fechamento = qtd_tendencias_positivas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + tendencias_negativas_fechamento)
-                            percentual_descida_ibovespa_fechamento = qtd_tendencias_negativas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + tendencias_negativas_fechamento)
-
-                            percentual_subida_ibovespa = (qtd_tendencias_positivas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *100
-                            percentual_descida_ibovespa = (qtd_tendencias_negativas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *-100
+                            st.text(qtd_tendencias_positivas_ibovespa_fechamento)
+                            st.text(qtd_tendencias_negativas_ibovespa_fechamento)
+                            
+                            if((qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento) > 0):
+                                
+                                percentual_subida_ibovespa_fechamento = (qtd_tendencias_positivas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + tendencias_negativas_fechamento)) * 100
+                                percentual_descida_ibovespa_fechamento = (qtd_tendencias_negativas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + tendencias_negativas_fechamento)) * -100
+                            
+                            if((qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)>0):
+                            
+                                percentual_subida_ibovespa = (qtd_tendencias_positivas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *100
+                                percentual_descida_ibovespa = (qtd_tendencias_negativas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *-100
                             
                             if(percentual_subida_ibovespa> percentual_descida_ibovespa):
                                 
