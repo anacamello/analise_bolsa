@@ -1022,8 +1022,8 @@ if botao:
                             
                             if((qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento) > 0):
                                 
-                                percentual_subida_ibovespa_fechamento = (qtd_tendencias_positivas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + tendencias_negativas_fechamento)) * 100
-                                percentual_descida_ibovespa_fechamento = (qtd_tendencias_negativas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + tendencias_negativas_fechamento)) * -100
+                                percentual_subida_ibovespa_fechamento = (qtd_tendencias_positivas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento)) * 100
+                                percentual_descida_ibovespa_fechamento = (qtd_tendencias_negativas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento)) * -100
                             
                             if((qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)>0):
                             
