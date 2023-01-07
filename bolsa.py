@@ -1044,7 +1044,7 @@ if botao:
                                 
                             else:
                                 
-                                st.metric("Tendência de Fechamento do Dia > Fechamento Dia Anterior: da Bolsa:", "Descida", percentual_descida_ibovespa_fechamento)
+                                st.metric("Tendência de Fechamento do Dia > Fechamento Dia Anterior:", "Descida", percentual_descida_ibovespa_fechamento)
 
                             fig = go.Figure()
                             fig.add_trace(go.Bar(y=['Tendência de Máxima > Fechamento Dia Anterior'], x=[percentual_subida_ibovespa], name='Subida', orientation='h', marker=dict(color='rgba(19, 141, 19, 1.0)', line=dict(color='rgba(19, 141, 19, 1.0)', width=3)))) 
