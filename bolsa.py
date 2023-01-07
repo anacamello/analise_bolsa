@@ -271,7 +271,7 @@ def treina_modelo_fechamento():
     X_train_completo, X_test_completo, Y_train_completo, Y_test_completo = train_test_split(X_completo, Y_completo, test_size = 0.2)
     
     # Instânciando a árvore de decisão
-    modelo_fechamento = RandomForestClassifier(criterion='gini', max_depth = 3, max_leaf_nodes = 500, min_samples_leaf = 10, min_samples_split = 100, n_estimators = 50)
+    modelo_fechamento = RandomForestClassifier(criterion='gini', max_depth = 10, max_leaf_nodes = 500, min_samples_leaf = 10, min_samples_split = 100, n_estimators = 50)
 
     # Treinando o modelo de arvore de decisão
     modelo_fechamento = modelo_fechamento.fit(X_train_completo, Y_train_completo)
