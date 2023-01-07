@@ -1023,14 +1023,14 @@ if botao:
                             if((qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento) > 0):
                                 
                                 percentual_subida_ibovespa_fechamento = (qtd_tendencias_positivas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento)) * 100
-                                percentual_descida_ibovespa_fechamento = (qtd_tendencias_negativas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento)) * -100
+                                percentual_descida_ibovespa_fechamento = (qtd_tendencias_negativas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento)) * - 100
                             
                             if((qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)>0):
                             
                                 percentual_subida_ibovespa = (qtd_tendencias_positivas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *100
                                 percentual_descida_ibovespa = (qtd_tendencias_negativas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *-100
                             
-                            if(percentual_subida_ibovespa> percentual_descida_ibovespa):
+                            if(percentual_subida_ibovespa> (percentual_descida_ibovespa*-1)):
                                 
                                 st.metric("Tendência de Máxima > Fechamento Dia Anterior:", "Subida", percentual_subida_ibovespa)
                                 
@@ -1038,7 +1038,7 @@ if botao:
                                 
                                 st.metric("Tendência de Máxima > Fechamento Dia Anterior:", "Descida", percentual_descida_ibovespa)
                                 
-                            if(percentual_subida_ibovespa_fechamento> percentual_descida_ibovespa_fechamento):
+                            if(percentual_subida_ibovespa_fechamento> (percentual_descida_ibovespa_fechamento*-1)):
                                 
                                 st.metric("Tendência de Fechamento do Dia > Fechamento Dia Anterior:", "Subida", percentual_subida_ibovespa_fechamento)
                                 
