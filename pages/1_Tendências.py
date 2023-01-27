@@ -414,41 +414,39 @@ def calcula_medianas():
         for i in codigos.index:
         
             codigo_yahoo = codigos.at[i, 'Codigo_Yahoo']
-            
-            try:
                 
-                dados_acao = yf.download(codigo_yahoo, dataInicial, dataFinal)
-                dados_acao = dados_acao.reset_index()
+            dados_acao = yf.download(codigo_yahoo, dataInicial, dataFinal)
+            dados_acao = dados_acao.reset_index()
 
-                dados_acao_filtrado = pd.DataFrame()
-                dados_acao_filtrado.insert(0, "Acao", 0, allow_duplicates = False)
-                dados_acao_filtrado.insert(1, "Abertura", 0, allow_duplicates = False)
-                dados_acao_filtrado.insert(2, "Máxima", 0, allow_duplicates = False)
-                dados_acao_filtrado.insert(3, "Mínima", 0, allow_duplicates = False)
-                dados_acao_filtrado.insert(4, "Subida", 0, allow_duplicates = False)
-                dados_acao_filtrado.insert(5, "Descida", 0, allow_duplicates = False)
+            dados_acao_filtrado = pd.DataFrame()
+            dados_acao_filtrado.insert(0, "Acao", 0, allow_duplicates = False)
+            dados_acao_filtrado.insert(1, "Abertura", 0, allow_duplicates = False)
+            dados_acao_filtrado.insert(2, "Máxima", 0, allow_duplicates = False)
+            dados_acao_filtrado.insert(3, "Mínima", 0, allow_duplicates = False)
+            dados_acao_filtrado.insert(4, "Subida", 0, allow_duplicates = False)
+            dados_acao_filtrado.insert(5, "Descida", 0, allow_duplicates = False)
 
-                if(dados_acao_filtrado.notna):
+            if(dados_acao_filtrado.notna):
 
-                    if(len(dados_acao) > 0):
+                if(len(dados_acao) > 0):
 
-                        for j in dados_acao.index:
+                    for j in dados_acao.index:
 
-                            dados_acao_filtrado.at[j, 'Acao'] = codigo_yahoo
-                            dados_acao_filtrado.at[j, 'Abertura'] = dados_acao.at[j, 'Open']
-                            dados_acao_filtrado.at[j, 'Máxima'] = dados_acao.at[j, 'High']
-                            dados_acao_filtrado.at[j, 'Mínima'] = dados_acao.at[j, 'Low']
+                        dados_acao_filtrado.at[j, 'Acao'] = codigo_yahoo
+                        dados_acao_filtrado.at[j, 'Abertura'] = dados_acao.at[j, 'Open']
+                        dados_acao_filtrado.at[j, 'Máxima'] = dados_acao.at[j, 'High']
+                        dados_acao_filtrado.at[j, 'Mínima'] = dados_acao.at[j, 'Low']
 
-                            if(dados_acao_filtrado.at[j, 'Abertura'] > 0):
+                        if(dados_acao_filtrado.at[j, 'Abertura'] > 0):
 
-                                dados_acao_filtrado.at[j, 'Subida'] = (dados_acao_filtrado.at[j, 'Máxima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
-                                dados_acao_filtrado.at[j, 'Descida'] = (dados_acao_filtrado.at[j, 'Mínima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
+                            dados_acao_filtrado.at[j, 'Subida'] = (dados_acao_filtrado.at[j, 'Máxima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
+                            dados_acao_filtrado.at[j, 'Descida'] = (dados_acao_filtrado.at[j, 'Mínima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
 
-                    medianas.at[linha, 'Acao'] = codigo_yahoo
-                    medianas.at[linha, 'Mediana_Subida'] = dados_acao_filtrado['Subida'].median()*100
-                    medianas.at[linha, 'Mediana_Descida'] = dados_acao_filtrado['Descida'].median()*100
+                medianas.at[linha, 'Acao'] = codigo_yahoo
+                medianas.at[linha, 'Mediana_Subida'] = dados_acao_filtrado['Subida'].median()*100
+                medianas.at[linha, 'Mediana_Descida'] = dados_acao_filtrado['Descida'].median()*100
 
-                    linha = linha + 1
+                linha = linha + 1
 
         st.sidebar.success('Medianas calculadas.')
     
