@@ -27,11 +27,11 @@ def treina_modelo(opcoes_dados_selecionados):
     
     if(opcoes_dados_selecionados == 0):
         
-        acoes_historico = pd.read_csv('./Dados/dados_historicos.csv', sep=",")
+        acoes_historico = pd.read_csv('../Dados/dados_historicos.csv', sep=",")
         
     else:
         
-        acoes_historico = pd.read_csv('./Dados/dados_historicos_bovespa.csv', sep=",")
+        acoes_historico = pd.read_csv('../Dados/dados_historicos_bovespa.csv', sep=",")
     
     with st.spinner('Treinando Modelo. Aguarde...'):
 
@@ -68,7 +68,7 @@ def treina_modelo(opcoes_dados_selecionados):
 
 def treina_modelo_fechamento():
     
-    acoes_historico = pd.read_csv('./Dados/dados_historicos_bovespa_fechamento.csv', sep=",")
+    acoes_historico = pd.read_csv('../Dados/dados_historicos_bovespa_fechamento.csv', sep=",")
     
     acoes_historico.drop(["Unnamed: 0"], axis = 1, inplace = True)
     acoes_historico = acoes_historico.reset_index(drop = True)
@@ -98,7 +98,7 @@ def calcula_tendencia(modelo):
     
     with st.spinner('Calculando as tendências de mínima/ máxima. Aguarde...'):
         
-        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
+        acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";") 
         codigos = pd.DataFrame(acoes_completo['Codigo_Yahoo']) 
         
         dados_consolidados = pd.DataFrame()
@@ -237,7 +237,7 @@ def calcula_tendencia_fechamento(modelo_fechamento):
     
     with st.spinner('Calculando as tendências de fechamento. Aguarde...'):
         
-        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
+        acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";") 
         codigos = pd.DataFrame(acoes_completo[{'Codigo_Yahoo', 'Indice_Bovespa'}]) 
         
         dados_consolidados_fechamento = pd.DataFrame()
@@ -364,7 +364,7 @@ def calcula_medianas():
 
     with st.spinner('Calculando as medianas. Aguarde...'):
         
-        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
+        acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";") 
         codigos = pd.DataFrame(acoes_completo['Codigo_Yahoo']) 
         
         medianas = pd.DataFrame()
@@ -434,7 +434,7 @@ def calcula_medianas():
 # In[ ]:
 
 
-acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";")
+acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";")
 acoes_lista = list(acoes_completo['Codigo'])
 acoes_completo_indice = pd.DataFrame({'Codigo': acoes_completo['Codigo_Yahoo'], 'Indice_Bovespa': acoes_completo['Indice_Bovespa']})
 acoes_indice_bovespa = acoes_completo_indice.query("Indice_Bovespa=='Sim'")
@@ -511,7 +511,7 @@ if botao:
     resultado_medianas = calcula_medianas()
 
     merge_tendencias_medianas = pd.merge(tendencias, resultado_medianas, how = 'inner', on = 'Acao')
-
+    
     # Tendências Positivas (Máxima em relação ao Fechamento)
     tendencias_positivas = merge_tendencias_medianas.query("Previsao==1.0")
     tendencias_positivas = pd.DataFrame({'Ação': tendencias_positivas['Acao'], 'Previsão' : 'Subida', 'Mediana Subida': tendencias_positivas['Mediana_Subida'], 'Chances de acerto': tendencias_positivas['Chances Subida %']})
@@ -530,6 +530,14 @@ if botao:
     tendencias_positivas_fechamento = tendencias_fechamento.query("Previsao==1.0")
     tendencias_positivas_fechamento = pd.DataFrame({'Ação': tendencias_positivas_fechamento['Acao'], 'Previsão' : 'Subida', 'Chances de acerto': tendencias_positivas_fechamento['Chances Subida %']})
     tendencias_positivas_fechamento = tendencias_positivas_fechamento.reset_index(drop = True)
+    
+    qtd_tendencias_positivas_ibovespa_fechamento_filtrado = 0
+    
+    for a in tendencias_positivas_fechamento:
+    
+        if(tendencias_positivas_fechamento.at[a, 'Chances de acerto']>=0.51):
+            
+            qtd_tendencias_positivas_ibovespa_fechamento_filtrado = qtd_tendencias_positivas_ibovespa_fechamento_filtrado + 1
 
     tendencias_positivas_fechamento['Chances de acerto'] = pd.Series(["{0:.2f}%".format(val*100) for val in tendencias_positivas_fechamento['Chances de acerto']], index = tendencias_positivas_fechamento.index)
     tendencias_positivas_fechamento['Chances de acerto'] = tendencias_positivas_fechamento['Chances de acerto'].astype(str)
@@ -539,6 +547,14 @@ if botao:
     tendencias_negativas = merge_tendencias_medianas.query("Previsao==0.0")
     tendencias_negativas = pd.DataFrame({'Ação': tendencias_negativas['Acao'], 'Previsão' : 'Descida', 'Mediana Descida': tendencias_negativas['Mediana_Descida'], 'Chances de acerto': tendencias_negativas['Chances Descida %']})
     tendencias_negativas = tendencias_negativas.reset_index(drop = True)
+    
+    qtd_tendencias_negativas_ibovespa_fechamento_filtrado = 0
+    
+    for a in tendencias_negativas_fechamento:
+    
+        if(tendencias_negativas_fechamento.at[a, 'Chances de acerto']>=0.51):
+            
+            qtd_tendencias_negativas_ibovespa_fechamento_filtrado = qtd_tendencias_negativas_ibovespa_fechamento_filtrado + 1
 
     tendencias_negativas['Mediana Descida'] = pd.Series(["{0:.2f}%".format(val) for val in tendencias_negativas['Mediana Descida']], index = tendencias_negativas.index)
     tendencias_negativas['Mediana Descida'] = tendencias_negativas['Mediana Descida'].astype(str)
@@ -643,7 +659,7 @@ if botao:
 
             qtd_tendencias_positivas_ibovespa_fechamento = int(len(tendencias_positivas_fechamento))
             qtd_tendencias_negativas_ibovespa_fechamento = int(len(tendencias_negativas_fechamento))
-
+            
             if((qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento) > 0):
 
                 percentual_subida_ibovespa_fechamento = (qtd_tendencias_positivas_ibovespa_fechamento / (qtd_tendencias_positivas_ibovespa_fechamento + qtd_tendencias_negativas_ibovespa_fechamento)) * 100
@@ -653,7 +669,12 @@ if botao:
 
                 percentual_subida_ibovespa = (qtd_tendencias_positivas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *100
                 percentual_descida_ibovespa = (qtd_tendencias_negativas_ibovespa / (qtd_tendencias_positivas_ibovespa+qtd_tendencias_negativas_ibovespa)) *-100
+            
+            if((qtd_tendencias_positivas_ibovespa_fechamento_filtrado+qtd_tendencias_negativas_ibovespa_fechamento_filtrado)>0):
 
+                percentual_subida_ibovespa_fechamento_filtrado = (qtd_tendencias_positivas_ibovespa_fechamento_filtrado / (qtd_tendencias_positivas_ibovespa_fechamento_filtrado+qtd_tendencias_negativas_ibovespa_fechamento_filtrado)) *100
+                percentual_descida_ibovespa_fechamento_filtrado = (qtd_tendencias_negativas_ibovespa_fechamento_filtrado / (qtd_tendencias_positivas_ibovespa_fechamento_filtrado+qtd_tendencias_negativas_ibovespa_fechamento_filtrado)) *-100
+            
             if(percentual_subida_ibovespa> (percentual_descida_ibovespa*-1)):
 
                 st.metric("Tendência de Máxima > Fechamento Dia Anterior:", "Subida", percentual_subida_ibovespa)
@@ -669,6 +690,15 @@ if botao:
             else:
 
                 st.metric("Tendência de Fechamento do Dia > Fechamento Dia Anterior:", "Descida", percentual_descida_ibovespa_fechamento)
+                
+            if(percentual_subida_ibovespa_fechamento_filtrado> (percentual_descida_ibovespa_fechamento_filtrado*-1)):
+
+                st.metric("FILTRADO - Tendência de Fechamento do Dia > Fechamento Dia Anterior:", "Subida", percentual_subida_ibovespa_fechamento_filtrado)
+
+            else:
+
+                st.metric("FILTRADO -  Tendência de Fechamento do Dia > Fechamento Dia Anterior:", "Descida", percentual_descida_ibovespa_fechamento_filtrado)
+
 
             fig = go.Figure()
             fig.add_trace(go.Bar(y=['Tendência de Máxima > Fechamento Dia Anterior'], x=[percentual_subida_ibovespa], name='Subida', orientation='h', marker=dict(color='rgba(19, 141, 19, 1.0)', line=dict(color='rgba(19, 141, 19, 1.0)', width=3)))) 
