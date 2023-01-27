@@ -531,7 +531,7 @@ if botao:
     tendencias_positivas_fechamento = pd.DataFrame({'Ação': tendencias_positivas_fechamento['Acao'], 'Previsão' : 'Subida', 'Chances de acerto': tendencias_positivas_fechamento['Chances Subida %']})
     tendencias_positivas_fechamento = tendencias_positivas_fechamento.reset_index(drop = True)
     
-    print(tendencias_positivas_fechamento)
+    st.dataframe(tendencias_positivas_fechamento)
     
     qtd_tendencias_positivas_ibovespa_fechamento_filtrado = 0
     
