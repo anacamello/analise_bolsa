@@ -416,9 +416,11 @@ def calcula_medianas():
                         dados_acao_filtrado.at[j, 'Abertura'] = dados_acao.at[j, 'Open']
                         dados_acao_filtrado.at[j, 'Máxima'] = dados_acao.at[j, 'High']
                         dados_acao_filtrado.at[j, 'Mínima'] = dados_acao.at[j, 'Low']
+                        
+                        if(dados_acao_filtrado.at[j, 'Abertura'] > 0):
 
-                        dados_acao_filtrado.at[j, 'Subida'] = (dados_acao_filtrado.at[j, 'Máxima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
-                        dados_acao_filtrado.at[j, 'Descida'] = (dados_acao_filtrado.at[j, 'Mínima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
+                            dados_acao_filtrado.at[j, 'Subida'] = (dados_acao_filtrado.at[j, 'Máxima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
+                            dados_acao_filtrado.at[j, 'Descida'] = (dados_acao_filtrado.at[j, 'Mínima'] / dados_acao_filtrado.at[j, 'Abertura'])-1
 
                 medianas.at[linha, 'Acao'] = codigo_yahoo
                 medianas.at[linha, 'Mediana_Subida'] = dados_acao_filtrado['Subida'].median()*100
