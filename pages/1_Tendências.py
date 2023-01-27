@@ -228,7 +228,7 @@ def calcula_tendencia(modelo):
 
                     linha = linha + 1
 
-    st.sidebar.success('Tendências de mínima/ máxima calculadas.')
+    #st.sidebar.success('Tendências de mínima/ máxima calculadas.')
     
     dados_consolidados = dados_consolidados.reset_index(drop=True)
     
