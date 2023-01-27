@@ -371,7 +371,7 @@ def calcula_tendencia_fechamento(modelo_fechamento):
 
                         linha = linha + 1
 
-        st.sidebar.success('Tendências de fechamento calculadas.')
+            st.sidebar.success('Tendências de fechamento calculadas.')
     
     dados_consolidados_fechamento = dados_consolidados_fechamento.reset_index(drop=True)
     
