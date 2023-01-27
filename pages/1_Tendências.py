@@ -508,9 +508,8 @@ if botao:
     tendencias = calcula_tendencia(modelo_treinado)
     tendencias_fechamento = calcula_tendencia_fechamento(modelo_treinado_fechamento)
 
-    #resultado_medianas = calcula_medianas()
-    resultado_medianas = pd.DataFrame()
-
+    resultado_medianas = calcula_medianas()
+   
     merge_tendencias_medianas = pd.merge(tendencias, resultado_medianas, how = 'inner', on = 'Acao')
     
     # Tendências Positivas (Máxima em relação ao Fechamento)
