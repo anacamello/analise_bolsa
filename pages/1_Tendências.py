@@ -228,7 +228,7 @@ def calcula_tendencia(modelo):
 
                     linha = linha + 1
                     
-                except:
+            except:
                     
                     
 
