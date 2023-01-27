@@ -98,7 +98,17 @@ def calcula_tendencia(modelo):
     
     with st.spinner('Calculando as tendências de mínima/ máxima. Aguarde...'):
         
-                    
+        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
+        codigos = pd.DataFrame(acoes_completo['Codigo_Yahoo']) 
+        
+        dados_consolidados = pd.DataFrame()
+        
+    st.sidebar.success('Tendências de mínima/ máxima calculadas.')
+    
+    dados_consolidados = dados_consolidados.reset_index(drop=True)
+
+    return dados_consolidados
+    
 
 
 # In[ ]:
