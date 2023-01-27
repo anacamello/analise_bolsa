@@ -27,11 +27,11 @@ def treina_modelo(opcoes_dados_selecionados):
     
     if(opcoes_dados_selecionados == 0):
         
-        acoes_historico = pd.read_csv('../Dados/dados_historicos.csv', sep=",")
+        acoes_historico = pd.read_csv('./Dados/dados_historicos.csv', sep=",")
         
     else:
         
-        acoes_historico = pd.read_csv('../Dados/dados_historicos_bovespa.csv', sep=",")
+        acoes_historico = pd.read_csv('./Dados/dados_historicos_bovespa.csv', sep=",")
     
     with st.spinner('Treinando Modelo. Aguarde...'):
 
@@ -68,7 +68,7 @@ def treina_modelo(opcoes_dados_selecionados):
 
 def treina_modelo_fechamento():
     
-    acoes_historico = pd.read_csv('../Dados/dados_historicos_bovespa_fechamento.csv', sep=",")
+    acoes_historico = pd.read_csv('./Dados/dados_historicos_bovespa_fechamento.csv', sep=",")
     
     acoes_historico.drop(["Unnamed: 0"], axis = 1, inplace = True)
     acoes_historico = acoes_historico.reset_index(drop = True)
@@ -98,7 +98,7 @@ def calcula_tendencia(modelo):
     
     with st.spinner('Calculando as tendências de mínima/ máxima. Aguarde...'):
         
-        acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";") 
+        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
         codigos = pd.DataFrame(acoes_completo['Codigo_Yahoo']) 
         
         dados_consolidados = pd.DataFrame()
@@ -249,7 +249,7 @@ def calcula_tendencia_fechamento(modelo_fechamento):
     
     with st.spinner('Calculando as tendências de fechamento. Aguarde...'):
         
-        acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";") 
+        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
         codigos = pd.DataFrame(acoes_completo[{'Codigo_Yahoo', 'Indice_Bovespa'}]) 
         
         dados_consolidados_fechamento = pd.DataFrame()
@@ -400,7 +400,7 @@ def calcula_medianas():
 
     with st.spinner('Calculando as medianas. Aguarde...'):
         
-        acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";") 
+        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
         codigos = pd.DataFrame(acoes_completo['Codigo_Yahoo']) 
         
         medianas = pd.DataFrame()
@@ -482,7 +482,7 @@ def calcula_medianas():
 # In[ ]:
 
 
-acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";")
+acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";")
 acoes_lista = list(acoes_completo['Codigo'])
 acoes_completo_indice = pd.DataFrame({'Codigo': acoes_completo['Codigo_Yahoo'], 'Indice_Bovespa': acoes_completo['Indice_Bovespa']})
 acoes_indice_bovespa = acoes_completo_indice.query("Indice_Bovespa=='Sim'")
