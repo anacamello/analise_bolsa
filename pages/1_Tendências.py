@@ -277,101 +277,99 @@ def calcula_tendencia_fechamento(modelo_fechamento):
 
                 codigo = codigos.at[i, 'Codigo_Yahoo']
                 
-                try:
-                    
-                    dados_acao = yf.download(codigo, dataInicial, dataFinal)
-                    dados_acao = dados_acao.reset_index()
+                dados_acao = yf.download(codigo, dataInicial, dataFinal)
+                dados_acao = dados_acao.reset_index()
 
-                    if(dados_acao.notna):
+                if(dados_acao.notna):
 
-                        if(len(dados_acao) > 0):
+                    if(len(dados_acao) > 0):
 
-                            for j in dados_acao.index:
+                        for j in dados_acao.index:
 
-                                data_string = str(dados_acao.at[j, 'Date'])
-                                ano = data_string[0:4]
-                                mes = data_string[5:7]
-                                dia = data_string[8:10]
+                            data_string = str(dados_acao.at[j, 'Date'])
+                            ano = data_string[0:4]
+                            mes = data_string[5:7]
+                            dia = data_string[8:10]
 
-                                data_string_formatada = ano+mes+dia
+                            data_string_formatada = ano+mes+dia
 
-                                data = dt.datetime(int(ano), int(mes), int(dia))
+                            data = dt.datetime(int(ano), int(mes), int(dia))
 
-                                if(dados_acao.at[j, 'Low'] != 0 and dados_acao.at[j, 'Open'] !=0 and dados_acao.at[j, 'Close'] != 0):
+                            if(dados_acao.at[j, 'Low'] != 0 and dados_acao.at[j, 'Open'] !=0 and dados_acao.at[j, 'Close'] != 0):
 
-                                    dados_acao.at[j, 'Distancia_Maxima_Minima'] = (dados_acao.at[j, 'High'] / dados_acao.at[j, 'Low'])-1
-                                    dados_acao.at[j, 'Distancia_Abertura_Minima'] = (dados_acao.at[j, 'Low'] / dados_acao.at[j, 'Open'])-1
-                                    dados_acao.at[j, 'Distancia_Abertura_Maxima'] = (dados_acao.at[j, 'High'] / dados_acao.at[j, 'Open'])-1
-                                    dados_acao.at[j, 'Distancia_Abertura_Fechamento'] = (dados_acao.at[j, 'Close'] / dados_acao.at[j, 'Open'])-1
-                                    dados_acao.at[j, 'Distancia_Maxima_Fechamento'] = (dados_acao.at[j, 'High'] / dados_acao.at[j, 'Close'])-1
-                                    dados_acao.at[j, 'Distancia_Minima_Fechamento'] = (dados_acao.at[j, 'Low'] / dados_acao.at[j, 'Close'])-1
-
-                                else:
-
-                                    dados_acao.at[j, 'Distancia_Maxima_Minima'] = ""
-                                    dados_acao.at[j, 'Distancia_Abertura_Minima'] = ""
-                                    dados_acao.at[j, 'Distancia_Abertura_Maxima'] = ""
-                                    dados_acao.at[j, 'Distancia_Abertura_Fechamento'] = ""
-                                    dados_acao.at[j, 'Distancia_Maxima_Fechamento'] = ""
-                                    dados_acao.at[j, 'Distancia_Minima_Fechamento'] = ""
-
-                                if(j > 0):
-
-                                    dados_acao.at[j, 'Tendencia_Anterior'] = dados_acao.at[j-1, 'Aumento_Preco']
-
-                                    if(dados_acao.at[j-1, 'Close'] != 0):
-
-                                        dados_acao.at[j, 'Variacao_Periodo_Anterior'] = (dados_acao.at[j, 'High'] / dados_acao.at[j-1, 'Close'])-1
-
-                                    #Verifica se a ação subiu ou desceu em relação ao último período
-
-                                    if(dados_acao.at[j, 'Close'] > dados_acao.at[j-1, 'Close']):
-
-                                        dados_acao.at[j, 'Aumento_Preco'] = 1
-
-                                    else:
-
-                                        dados_acao.at[j, 'Aumento_Preco'] = 0
-
-                                    dados_acao.at[j, 'Dia_Semana'] = data.isoweekday()
-
-                                else:
-
-                                    dados_acao.at[j, 'Tendencia_Anterior'] = 0
-                                    dados_acao.at[j, 'Variacao_Periodo_Anterior'] = 0
-                                    dados_acao.at[j, 'Aumento_Preco'] = 0
-
-                            dados_acao.drop(["Adj Close", "Date", "Aumento_Preco", "Close", "Open", "High", "Low"], axis = 1, inplace = True)
-                            dados_acao = dados_acao.dropna(axis=0)
-                            dados_acao = dados_acao.reset_index(drop = True)
-
-                            dados_acao = dados_acao.astype({'Distancia_Maxima_Minima': 'float16', 'Distancia_Abertura_Minima': 'float16', 'Distancia_Abertura_Maxima': 'float16', 'Distancia_Abertura_Fechamento': 'float16', 'Distancia_Maxima_Fechamento': 'float16', 'Distancia_Minima_Fechamento': 'float16', 'Tendencia_Anterior': 'float16', 'Variacao_Periodo_Anterior': 'float16', 'Dia_Semana': 'float16'})
-                            dados_acao = dados_acao.dropna(axis=0)
-                            dados_acao = dados_acao.reset_index(drop=True)
-
-                            if(len(dados_acao) > 0):
-
-                                dados_acao = dados_acao.iloc[-1]
-                                dados_acao_array = np.array(dados_acao)
-                                dados_acao_array.reshape(-1, 1)
-
-                                previsao = modelo_fechamento.predict([dados_acao_array])
-                                previsao_percentual = modelo_fechamento.predict_proba([dados_acao_array])
+                                dados_acao.at[j, 'Distancia_Maxima_Minima'] = (dados_acao.at[j, 'High'] / dados_acao.at[j, 'Low'])-1
+                                dados_acao.at[j, 'Distancia_Abertura_Minima'] = (dados_acao.at[j, 'Low'] / dados_acao.at[j, 'Open'])-1
+                                dados_acao.at[j, 'Distancia_Abertura_Maxima'] = (dados_acao.at[j, 'High'] / dados_acao.at[j, 'Open'])-1
+                                dados_acao.at[j, 'Distancia_Abertura_Fechamento'] = (dados_acao.at[j, 'Close'] / dados_acao.at[j, 'Open'])-1
+                                dados_acao.at[j, 'Distancia_Maxima_Fechamento'] = (dados_acao.at[j, 'High'] / dados_acao.at[j, 'Close'])-1
+                                dados_acao.at[j, 'Distancia_Minima_Fechamento'] = (dados_acao.at[j, 'Low'] / dados_acao.at[j, 'Close'])-1
 
                             else:
 
-                                previsao[0] = 0
-                                previsao_percentual[0][0] = 0
-                                previsao_percentual[0][1] = 0
+                                dados_acao.at[j, 'Distancia_Maxima_Minima'] = ""
+                                dados_acao.at[j, 'Distancia_Abertura_Minima'] = ""
+                                dados_acao.at[j, 'Distancia_Abertura_Maxima'] = ""
+                                dados_acao.at[j, 'Distancia_Abertura_Fechamento'] = ""
+                                dados_acao.at[j, 'Distancia_Maxima_Fechamento'] = ""
+                                dados_acao.at[j, 'Distancia_Minima_Fechamento'] = ""
 
-                        dados_consolidados_fechamento.at[linha, "Acao"] = codigo
-                        dados_consolidados_fechamento.at[linha, "Previsao"] = previsao[0]
-                        dados_consolidados_fechamento.at[linha, "Chances Descida %"] = previsao_percentual[0][0]
-                        dados_consolidados_fechamento.at[linha, "Chances Subida %"] = previsao_percentual[0][1]
+                            if(j > 0):
 
-                        linha = linha + 1
+                                dados_acao.at[j, 'Tendencia_Anterior'] = dados_acao.at[j-1, 'Aumento_Preco']
 
-            st.sidebar.success('Tendências de fechamento calculadas.')
+                                if(dados_acao.at[j-1, 'Close'] != 0):
+
+                                    dados_acao.at[j, 'Variacao_Periodo_Anterior'] = (dados_acao.at[j, 'High'] / dados_acao.at[j-1, 'Close'])-1
+
+                                #Verifica se a ação subiu ou desceu em relação ao último período
+
+                                if(dados_acao.at[j, 'Close'] > dados_acao.at[j-1, 'Close']):
+
+                                    dados_acao.at[j, 'Aumento_Preco'] = 1
+
+                                else:
+
+                                    dados_acao.at[j, 'Aumento_Preco'] = 0
+
+                                dados_acao.at[j, 'Dia_Semana'] = data.isoweekday()
+
+                            else:
+
+                                dados_acao.at[j, 'Tendencia_Anterior'] = 0
+                                dados_acao.at[j, 'Variacao_Periodo_Anterior'] = 0
+                                dados_acao.at[j, 'Aumento_Preco'] = 0
+
+                        dados_acao.drop(["Adj Close", "Date", "Aumento_Preco", "Close", "Open", "High", "Low"], axis = 1, inplace = True)
+                        dados_acao = dados_acao.dropna(axis=0)
+                        dados_acao = dados_acao.reset_index(drop = True)
+
+                        dados_acao = dados_acao.astype({'Distancia_Maxima_Minima': 'float16', 'Distancia_Abertura_Minima': 'float16', 'Distancia_Abertura_Maxima': 'float16', 'Distancia_Abertura_Fechamento': 'float16', 'Distancia_Maxima_Fechamento': 'float16', 'Distancia_Minima_Fechamento': 'float16', 'Tendencia_Anterior': 'float16', 'Variacao_Periodo_Anterior': 'float16', 'Dia_Semana': 'float16'})
+                        dados_acao = dados_acao.dropna(axis=0)
+                        dados_acao = dados_acao.reset_index(drop=True)
+
+                        if(len(dados_acao) > 0):
+
+                            dados_acao = dados_acao.iloc[-1]
+                            dados_acao_array = np.array(dados_acao)
+                            dados_acao_array.reshape(-1, 1)
+
+                            previsao = modelo_fechamento.predict([dados_acao_array])
+                            previsao_percentual = modelo_fechamento.predict_proba([dados_acao_array])
+
+                        else:
+
+                            previsao[0] = 0
+                            previsao_percentual[0][0] = 0
+                            previsao_percentual[0][1] = 0
+
+                    dados_consolidados_fechamento.at[linha, "Acao"] = codigo
+                    dados_consolidados_fechamento.at[linha, "Previsao"] = previsao[0]
+                    dados_consolidados_fechamento.at[linha, "Chances Descida %"] = previsao_percentual[0][0]
+                    dados_consolidados_fechamento.at[linha, "Chances Subida %"] = previsao_percentual[0][1]
+
+                    linha = linha + 1
+
+        st.sidebar.success('Tendências de fechamento calculadas.')
     
     dados_consolidados_fechamento = dados_consolidados_fechamento.reset_index(drop=True)
     
