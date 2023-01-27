@@ -531,11 +531,13 @@ if botao:
     tendencias_positivas_fechamento = pd.DataFrame({'Ação': tendencias_positivas_fechamento['Acao'], 'Previsão' : 'Subida', 'Chances de acerto': tendencias_positivas_fechamento['Chances Subida %']})
     tendencias_positivas_fechamento = tendencias_positivas_fechamento.reset_index(drop = True)
     
+    print(tendencias_positivas_fechamento)
+    
     qtd_tendencias_positivas_ibovespa_fechamento_filtrado = 0
     
     for a in tendencias_positivas_fechamento:
     
-        if(tendencias_positivas_fechamento.at[a, 'Chances de acerto']>=0.51):
+        if(float(tendencias_positivas_fechamento.at[a, 'Chances de acerto'])>=0.51):
             
             qtd_tendencias_positivas_ibovespa_fechamento_filtrado = qtd_tendencias_positivas_ibovespa_fechamento_filtrado + 1
 
@@ -552,7 +554,7 @@ if botao:
     
     for a in tendencias_negativas_fechamento:
     
-        if(tendencias_negativas_fechamento.at[a, 'Chances de acerto']>=0.51):
+        if(float(tendencias_negativas_fechamento.at[a, 'Chances de acerto'])>=0.51):
             
             qtd_tendencias_negativas_ibovespa_fechamento_filtrado = qtd_tendencias_negativas_ibovespa_fechamento_filtrado + 1
 
