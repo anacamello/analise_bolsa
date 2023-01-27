@@ -27,11 +27,11 @@ def treina_modelo(opcoes_dados_selecionados):
     
     if(opcoes_dados_selecionados == 0):
         
-        acoes_historico = pd.read_csv('./Dados/dados_historicos.csv', sep=",")
+        acoes_historico = pd.read_csv('../Dados/dados_historicos.csv', sep=",")
         
     else:
         
-        acoes_historico = pd.read_csv('./Dados/dados_historicos_bovespa.csv', sep=",")
+        acoes_historico = pd.read_csv('../Dados/dados_historicos_bovespa.csv', sep=",")
     
     with st.spinner('Treinando Modelo. Aguarde...'):
 
@@ -68,7 +68,7 @@ def treina_modelo(opcoes_dados_selecionados):
 
 def treina_modelo_fechamento():
     
-    acoes_historico = pd.read_csv('./Dados/dados_historicos_bovespa_fechamento.csv', sep=",")
+    acoes_historico = pd.read_csv('../Dados/dados_historicos_bovespa_fechamento.csv', sep=",")
     
     acoes_historico.drop(["Unnamed: 0"], axis = 1, inplace = True)
     acoes_historico = acoes_historico.reset_index(drop = True)
@@ -98,7 +98,7 @@ def calcula_tendencia(modelo):
     
     with st.spinner('Calculando as tendências de mínima/ máxima. Aguarde...'):
         
-        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
+        acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";") 
         codigos = pd.DataFrame(acoes_completo['Codigo_Yahoo']) 
         
         dados_consolidados = pd.DataFrame()
@@ -131,14 +131,22 @@ def calcula_tendencia(modelo):
         for i in codigos.index:
 
             codigo = codigos.at[i, 'Codigo_Yahoo']
+            dados_acao = pd.DataFrame()
+            
+            try:
                 
-            dados_acao = yf.download(codigo, dataInicial, dataFinal)
-            dados_acao = dados_acao.reset_index()
-            dados_acao_filtrado = pd.DataFrame({'Abertura': dados_acao['Open'], 'Volume': dados_acao['Volume'], 'Máxima': dados_acao['High'], 'Fechamento': dados_acao['Close'], 'Mínima': dados_acao['Low']})
-
-            if(dados_acao_filtrado.notna):
-
+                dados_acao = yf.download(codigo, dataInicial, dataFinal)
+                
+            except:
+                
+                st.sidebar.error("Erro ao buscar dados da ação: " + codigo)
+                
+            if(dados_acao.notna):
+        
                 if(len(dados_acao) > 0):
+                
+                    dados_acao = dados_acao.reset_index()
+                    dados_acao_filtrado = pd.DataFrame({'Abertura': dados_acao['Open'], 'Volume': dados_acao['Volume'], 'Máxima': dados_acao['High'], 'Fechamento': dados_acao['Close'], 'Mínima': dados_acao['Low']})
 
                     for j in dados_acao.index:
 
@@ -241,7 +249,7 @@ def calcula_tendencia_fechamento(modelo_fechamento):
     
     with st.spinner('Calculando as tendências de fechamento. Aguarde...'):
         
-        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
+        acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";") 
         codigos = pd.DataFrame(acoes_completo[{'Codigo_Yahoo', 'Indice_Bovespa'}]) 
         
         dados_consolidados_fechamento = pd.DataFrame()
@@ -274,15 +282,24 @@ def calcula_tendencia_fechamento(modelo_fechamento):
         for i in codigos.index:
             
             if(codigos.at[i, 'Indice_Bovespa'] == "Sim"):
-
+                
                 codigo = codigos.at[i, 'Codigo_Yahoo']
                 
-                dados_acao = yf.download(codigo, dataInicial, dataFinal)
-                dados_acao = dados_acao.reset_index()
+                dados_acao = pd.DataFrame()
+            
+                try:
 
+                    dados_acao = yf.download(codigo, dataInicial, dataFinal)
+
+                except:
+
+                    st.sidebar.error("Erro ao buscar dados da ação: " + codigo)
+                
                 if(dados_acao.notna):
 
                     if(len(dados_acao) > 0):
+                        
+                        dados_acao = dados_acao.reset_index()
 
                         for j in dados_acao.index:
 
@@ -383,7 +400,7 @@ def calcula_medianas():
 
     with st.spinner('Calculando as medianas. Aguarde...'):
         
-        acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";") 
+        acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";") 
         codigos = pd.DataFrame(acoes_completo['Codigo_Yahoo']) 
         
         medianas = pd.DataFrame()
@@ -414,21 +431,30 @@ def calcula_medianas():
         for i in codigos.index:
         
             codigo_yahoo = codigos.at[i, 'Codigo_Yahoo']
-                
-            dados_acao = yf.download(codigo_yahoo, dataInicial, dataFinal)
-            dados_acao = dados_acao.reset_index()
+            
+            dados_acao = pd.DataFrame()
+            
+            try:
 
-            dados_acao_filtrado = pd.DataFrame()
-            dados_acao_filtrado.insert(0, "Acao", 0, allow_duplicates = False)
-            dados_acao_filtrado.insert(1, "Abertura", 0, allow_duplicates = False)
-            dados_acao_filtrado.insert(2, "Máxima", 0, allow_duplicates = False)
-            dados_acao_filtrado.insert(3, "Mínima", 0, allow_duplicates = False)
-            dados_acao_filtrado.insert(4, "Subida", 0, allow_duplicates = False)
-            dados_acao_filtrado.insert(5, "Descida", 0, allow_duplicates = False)
+                dados_acao = yf.download(codigo_yahoo, dataInicial, dataFinal)
 
-            if(dados_acao_filtrado.notna):
+            except:
+
+                st.sidebar.error("Erro ao buscar dados da ação: " + codigo_yahoo)
+
+            if(dados_acao.notna):
 
                 if(len(dados_acao) > 0):
+                    
+                    dados_acao = dados_acao.reset_index()
+
+                    dados_acao_filtrado = pd.DataFrame()
+                    dados_acao_filtrado.insert(0, "Acao", 0, allow_duplicates = False)
+                    dados_acao_filtrado.insert(1, "Abertura", 0, allow_duplicates = False)
+                    dados_acao_filtrado.insert(2, "Máxima", 0, allow_duplicates = False)
+                    dados_acao_filtrado.insert(3, "Mínima", 0, allow_duplicates = False)
+                    dados_acao_filtrado.insert(4, "Subida", 0, allow_duplicates = False)
+                    dados_acao_filtrado.insert(5, "Descida", 0, allow_duplicates = False)
 
                     for j in dados_acao.index:
 
@@ -456,7 +482,7 @@ def calcula_medianas():
 # In[ ]:
 
 
-acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";")
+acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";")
 acoes_lista = list(acoes_completo['Codigo'])
 acoes_completo_indice = pd.DataFrame({'Codigo': acoes_completo['Codigo_Yahoo'], 'Indice_Bovespa': acoes_completo['Indice_Bovespa']})
 acoes_indice_bovespa = acoes_completo_indice.query("Indice_Bovespa=='Sim'")
