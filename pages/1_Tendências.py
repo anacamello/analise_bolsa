@@ -531,8 +531,6 @@ if botao:
     tendencias_positivas_fechamento = pd.DataFrame({'Ação': tendencias_positivas_fechamento['Acao'], 'Previsão' : 'Subida', 'Chances de acerto': tendencias_positivas_fechamento['Chances Subida %']})
     tendencias_positivas_fechamento = tendencias_positivas_fechamento.reset_index(drop = True)
     
-    st.dataframe(tendencias_positivas_fechamento)
-    
     qtd_tendencias_positivas_ibovespa_fechamento_filtrado = 0
     
     for a in tendencias_positivas_fechamento.index:
@@ -549,14 +547,6 @@ if botao:
     tendencias_negativas = merge_tendencias_medianas.query("Previsao==0.0")
     tendencias_negativas = pd.DataFrame({'Ação': tendencias_negativas['Acao'], 'Previsão' : 'Descida', 'Mediana Descida': tendencias_negativas['Mediana_Descida'], 'Chances de acerto': tendencias_negativas['Chances Descida %']})
     tendencias_negativas = tendencias_negativas.reset_index(drop = True)
-    
-    qtd_tendencias_negativas_ibovespa_fechamento_filtrado = 0
-    
-    for a in tendencias_negativas_fechamento.index:
-    
-        if(float(tendencias_negativas_fechamento.at[a, 'Chances de acerto'])>=0.51):
-            
-            qtd_tendencias_negativas_ibovespa_fechamento_filtrado = qtd_tendencias_negativas_ibovespa_fechamento_filtrado + 1
 
     tendencias_negativas['Mediana Descida'] = pd.Series(["{0:.2f}%".format(val) for val in tendencias_negativas['Mediana Descida']], index = tendencias_negativas.index)
     tendencias_negativas['Mediana Descida'] = tendencias_negativas['Mediana Descida'].astype(str)
@@ -570,6 +560,14 @@ if botao:
     tendencias_negativas_fechamento = tendencias_fechamento.query("Previsao==0.0")
     tendencias_negativas_fechamento = pd.DataFrame({'Ação': tendencias_negativas_fechamento['Acao'], 'Previsão' : 'Descida', 'Chances de acerto': tendencias_negativas_fechamento['Chances Descida %']})
     tendencias_negativas_fechamento = tendencias_negativas_fechamento.reset_index(drop = True)
+    
+    qtd_tendencias_negativas_ibovespa_fechamento_filtrado = 0
+    
+    for b in tendencias_negativas_fechamento.index:
+    
+        if(float(tendencias_negativas_fechamento.at[b, 'Chances de acerto'])>=0.51):
+            
+            qtd_tendencias_negativas_ibovespa_fechamento_filtrado = qtd_tendencias_negativas_ibovespa_fechamento_filtrado + 1
 
     tendencias_negativas_fechamento['Chances de acerto'] = pd.Series(["{0:.2f}%".format(val*100) for val in tendencias_negativas_fechamento['Chances de acerto']], index = tendencias_negativas_fechamento.index)
     tendencias_negativas_fechamento['Chances de acerto'] = tendencias_negativas_fechamento['Chances de acerto'].astype(str)
