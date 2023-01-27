@@ -232,11 +232,11 @@ def calcula_tendencia(modelo):
                     
                     
 
-    st.sidebar.success('Tendências de mínima/ máxima calculadas.')
-    
-    dados_consolidados = dados_consolidados.reset_index(drop=True)
-    
-    return dados_consolidados
+        st.sidebar.success('Tendências de mínima/ máxima calculadas.')
+
+        dados_consolidados = dados_consolidados.reset_index(drop=True)
+
+        return dados_consolidados
 
 
 # In[ ]:
