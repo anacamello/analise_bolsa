@@ -221,14 +221,14 @@ def calcula_tendencia(modelo):
                             previsao_percentual[0][0] = 0
                             previsao_percentual[0][1] = 0
 
-                    dados_consolidados.at[linha, "Acao"] = codigo
-                    dados_consolidados.at[linha, "Previsao"] = previsao[0]
-                    dados_consolidados.at[linha, "Chances Descida %"] = previsao_percentual[0][0]
-                    dados_consolidados.at[linha, "Chances Subida %"] = previsao_percentual[0][1]
+                dados_consolidados.at[linha, "Acao"] = codigo
+                dados_consolidados.at[linha, "Previsao"] = previsao[0]
+                dados_consolidados.at[linha, "Chances Descida %"] = previsao_percentual[0][0]
+                dados_consolidados.at[linha, "Chances Subida %"] = previsao_percentual[0][1]
 
-                    linha = linha + 1
+                linha = linha + 1
 
-    #st.sidebar.success('Tendências de mínima/ máxima calculadas.')
+    st.sidebar.success('Tendências de mínima/ máxima calculadas.')
     
     dados_consolidados = dados_consolidados.reset_index(drop=True)
     
