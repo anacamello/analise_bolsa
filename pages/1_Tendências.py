@@ -228,7 +228,7 @@ def calcula_tendencia(modelo):
 
                     linha = linha + 1
 
-    st.sidebar.success('Tendências de mínima/ máxima calculadas.')
+            st.sidebar.success('Tendências de mínima/ máxima calculadas.')
     
     dados_consolidados = dados_consolidados.reset_index(drop=True)
     
@@ -372,7 +372,7 @@ def calcula_tendencia_fechamento(modelo_fechamento):
 
                         linha = linha + 1
 
-    st.sidebar.success('Tendências de fechamento calculadas.')
+        st.sidebar.success('Tendências de fechamento calculadas.')
     
     dados_consolidados_fechamento = dados_consolidados_fechamento.reset_index(drop=True)
     
@@ -453,7 +453,7 @@ def calcula_medianas():
 
                     linha = linha + 1
 
-    st.sidebar.success('Medianas calculadas.')
+        st.sidebar.success('Medianas calculadas.')
     
     return medianas
 
