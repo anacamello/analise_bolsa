@@ -535,7 +535,7 @@ if botao:
     
     qtd_tendencias_positivas_ibovespa_fechamento_filtrado = 0
     
-    for a in tendencias_positivas_fechamento:
+    for a in tendencias_positivas_fechamento.index:
     
         if(float(tendencias_positivas_fechamento.at[a, 'Chances de acerto'])>=0.51):
             
@@ -552,7 +552,7 @@ if botao:
     
     qtd_tendencias_negativas_ibovespa_fechamento_filtrado = 0
     
-    for a in tendencias_negativas_fechamento:
+    for a in tendencias_negativas_fechamento.index:
     
         if(float(tendencias_negativas_fechamento.at[a, 'Chances de acerto'])>=0.51):
             
