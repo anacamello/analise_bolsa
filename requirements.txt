@@ -1,6 +1,6 @@
 streamlit
 pandas
 pandas-datareader
-yfinance
 scikit-learn
 plotly
+MetaTrader5
