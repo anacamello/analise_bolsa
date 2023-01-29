@@ -3,4 +3,5 @@ pandas
 pandas-datareader
 scikit-learn
 plotly
-MetaTrader5
+MetaTrader5==5.0.33
+numpy==1.22.3
