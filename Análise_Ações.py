@@ -12,12 +12,14 @@ from pandas_datareader import data as web
 import datetime as dt
 from datetime import date
 from datetime import timedelta
+from datetime import datetime
+import pytz
 import itertools
-import yfinance as yf
 from decimal import Decimal
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier 
 import plotly.graph_objects as go
+import MetaTrader5 as mt5
 
 
 # In[4]:
@@ -42,18 +44,25 @@ def cria_tabela_resumo_acao():
 # In[5]:
 
 
-def cria_dados_acao_tabela (codigoYahoo, dataInicial, dataFinal):
+def cria_dados_acao_tabela (codigo_acao, dataInicial, dataFinal):
 
-    dados_acao_tabela = yf.download(codigoYahoo, dataInicial, dataFinal)
+    if not mt5.initialize():
+        
+        print('initialize() failed')
+        mt5.shutdown()
+    
+    dados_acao_tabela = pd.DataFrame(mt5.copy_rates_range(codigo_acao, mt5.TIMEFRAME_D1, dataInicial, dataFinal))
+    
+    mt5.shutdown()
+    
     dados_acao_tabela = dados_acao_tabela.reset_index()
-
-    dados_acao_tabela.rename(columns={'Date': 'Data'}, inplace = True)
-    dados_acao_tabela.rename(columns={'Open': 'Abertura'}, inplace = True)
-    dados_acao_tabela.rename(columns={'High': 'Máxima'}, inplace = True)
-    dados_acao_tabela.rename(columns={'Low': 'Mínima'}, inplace = True)
-    dados_acao_tabela.rename(columns={'Close': 'Fechamento'}, inplace = True)
-    dados_acao_tabela.rename(columns={'Adj Close': 'Fech. Ajustado'}, inplace = True)
-    dados_acao_tabela.rename(columns={'Volume': 'Volume'}, inplace = True)
+    dados_acao_tabela['time']=pd.to_datetime(dados_acao_tabela['time'], unit='s')
+    dados_acao_tabela.rename(columns={'time': 'Data'}, inplace = True)
+    dados_acao_tabela.rename(columns={'open': 'Abertura'}, inplace = True)
+    dados_acao_tabela.rename(columns={'high': 'Máxima'}, inplace = True)
+    dados_acao_tabela.rename(columns={'low': 'Mínima'}, inplace = True)
+    dados_acao_tabela.rename(columns={'close': 'Fechamento'}, inplace = True)
+    dados_acao_tabela.rename(columns={'real_volume': 'Volume'}, inplace = True)
 
     dados_acao_tabela['Data'] = dados_acao_tabela['Data'].dt.strftime('%d/%m/%Y')
 
@@ -128,11 +137,6 @@ def formata_dados_acao_tabela():
     dados_acao_tabela['Fechamento'] = dados_acao_tabela['Fechamento'].astype(str)
     dados_acao_tabela['Fechamento'] = dados_acao_tabela['Fechamento'].str.replace('.', ',')
     dados_acao_tabela['Fechamento'] = dados_acao_tabela['Fechamento'].str.replace('_', '.')
-
-    dados_acao_tabela['Fech. Ajustado'] = pd.Series(["R$ {0: _.2f}".format(val) for val in dados_acao_tabela['Fech. Ajustado']], index = dados_acao_tabela.index)
-    dados_acao_tabela['Fech. Ajustado'] = dados_acao_tabela['Mínima'].astype(str)
-    dados_acao_tabela['Fech. Ajustado'] = dados_acao_tabela['Mínima'].str.replace('.', ',')
-    dados_acao_tabela['Fech. Ajustado'] = dados_acao_tabela['Mínima'].str.replace('_', '.')
 
     dados_acao_tabela['Volume'] = pd.Series(["R$ {0: _.2f}".format(val) for val in dados_acao_tabela['Volume']], index = dados_acao_tabela.index)
     dados_acao_tabela['Volume'] = dados_acao_tabela['Volume'].astype(str)
@@ -211,7 +215,7 @@ def cor_ganho(val):
 # In[ ]:
 
 
-acoes_completo = pd.read_csv('./Dados/acoes.csv', sep=";")
+acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";")
 acoes_lista = list(acoes_completo['Codigo'])
 acoes_completo_indice = pd.DataFrame({'Codigo': acoes_completo['Codigo_Yahoo'], 'Indice_Bovespa': acoes_completo['Indice_Bovespa']})
 acoes_indice_bovespa = acoes_completo_indice.query("Indice_Bovespa=='Sim'")
@@ -235,6 +239,8 @@ acoes_selecionadas = list(st.sidebar.multiselect('Selecione uma ou mais ações:
 
 dataInicialExibida = date.today() - timedelta(60)
 
+timezone = pytz.timezone("Etc/UTC")
+
 dataInicial = st.sidebar.date_input('Selecione a data inicial:', dataInicialExibida)
 
 variacao_min = st.sidebar.number_input('Variação Mínima:')
@@ -244,8 +250,6 @@ botao = st.sidebar.button('Calcular')
 
 #Cria as abas
 qtdAbas = 0
-
-yf.pdr_override() 
 
 hoje = dt.datetime.now()
 
@@ -302,13 +306,16 @@ if botao:
 
                         tabela_resumo_acao = cria_tabela_resumo_acao()
 
-                        codigoYahoo = pd.DataFrame(acoes_completo.loc[(acoes_completo['Codigo'] == acao), 'Codigo_Yahoo'])
+                        codigo_acao = pd.DataFrame(acoes_completo.loc[(acoes_completo['Codigo'] == acao), 'Codigo'])
 
-                        codigoYahoo = codigoYahoo.iloc[0, 0]
+                        codigo_acao = codigo_acao.iloc[0, 0]
 
                         with tabs[qtdAbas+1]:
+                            
+                            dataInicial_seg = datetime(dataInicial.year, dataInicial.month, dataInicial.day, tzinfo=timezone)
+                            dataFinal_seg = datetime(dataFinal.year, dataFinal.month, dataFinal.day, tzinfo=timezone)
 
-                            dados_acao_tabela = cria_dados_acao_tabela (codigoYahoo, dataInicial, dataFinal)
+                            dados_acao_tabela = cria_dados_acao_tabela (codigo_acao, dataInicial_seg, dataFinal_seg)
 
                             ultimoFechamentoAjustado = 0
 
@@ -449,7 +456,7 @@ if botao:
                     else:
 
                         continua = False
-
+                    
                     while continua:
 
                         codigo = tabela_relatorio_venda.at[num_linha, 'Código']
@@ -464,10 +471,17 @@ if botao:
                         resultado = tabela_relatorio_venda.at[num_linha, 'Resultado']
                         resultado_posterior = tabela_relatorio_venda.at[num_linha + 1, 'Resultado']
 
-                        if(codigo_posterior == codigo and qtdTrades == qtdTrades_posterior and qtdTradesPositivos == qtdTradesPositivos_posterior and resultado_posterior < resultado):
+                        if(codigo_posterior == codigo and qtdTrades == qtdTrades_posterior and qtdTradesPositivos == qtdTradesPositivos_posterior):                           
+                            
+                            if(resultado_posterior <= resultado):
 
-                            tabela_relatorio_venda.drop(labels = num_linha + 1, axis = 0, inplace = True)
-                            tabela_relatorio_venda = tabela_relatorio_venda.reset_index(drop = True)
+                                tabela_relatorio_venda.drop(labels = num_linha + 1, axis = 0, inplace = True)
+                                tabela_relatorio_venda = tabela_relatorio_venda.reset_index(drop = True)
+                                
+                            else:
+                                
+                                tabela_relatorio_venda.drop(labels = num_linha, axis = 0, inplace = True)
+                                tabela_relatorio_venda = tabela_relatorio_venda.reset_index(drop = True)
 
                         else:
 
@@ -480,7 +494,6 @@ if botao:
                     tabela_relatorio_venda = formata_tabela_relatorio_venda(tabela_relatorio_venda)
                     
                     st.dataframe(tabela_relatorio_venda)
-    
                     
             else:
                     
