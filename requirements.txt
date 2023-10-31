@@ -1,0 +1,15 @@
+st_aggrid
+streamlit
+pandas
+numpynumpy==1.22
+pandas_datareader
+datetime
+pytz
+itertools
+decimal
+sklearn.model_selection
+plotly.graph_objects
+MetaTrader5
+binance.client
+time import
+matplotlib.pyplot
