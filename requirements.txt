@@ -1,3 +1,4 @@
 yfinance
 streamlit-aggrid
 scikit-learn
+plotly.graph_objects
