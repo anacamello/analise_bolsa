@@ -9,7 +9,6 @@ from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
 import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
-from pandas_datareader import data as web
 import datetime as dt
 from datetime import date
 from datetime import timedelta
