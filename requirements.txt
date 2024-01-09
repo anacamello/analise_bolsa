@@ -1,3 +1,4 @@
 yahooquery
 streamlit-aggrid
 scikit-learn
+binance
