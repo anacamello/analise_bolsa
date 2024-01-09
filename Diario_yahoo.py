@@ -758,7 +758,7 @@ def compra_percFechamentoDiaAnterior(acoes_selecionadas, dataInicial, dataFinal,
 
                         if(ganho > 0.75): 
 
-                            tabela_relatorio_compra = tabela_relatorio_compra.append({'Código': acao, 'Variação': variacao, 'Ganho': ganho, 'Média do Volume no Período': mediaVolume, 'Preço de Entrada': precoEntrada, 'Data Referência': ultima_data, 'Qtd. Trades': qtdTrades, 'Qtd. Trades Positivos': qtdTradesPositivos, 'Qtd. Trades Negativos': qtdTradesNegativos, 'Média dos Trades Positivos': mediaTradesPositivos, 'Média dos Trades Negativos': mediaTradesNegativos, 'Maior Trade Positivo': maiorTradePositivo, 'Menor Trade Positivo': menorTradePositivo, 'Maior Trade Negativo': maiorTradeNegativo, 'Menor Trade Negativo': menorTradeNegativo, 'Resultado': resultado}, ignore_index = True)
+                            tabela_relatorio_compra = tabela_relatorio_compra.concat({'Código': acao, 'Variação': variacao, 'Ganho': ganho, 'Média do Volume no Período': mediaVolume, 'Preço de Entrada': precoEntrada, 'Data Referência': ultima_data, 'Qtd. Trades': qtdTrades, 'Qtd. Trades Positivos': qtdTradesPositivos, 'Qtd. Trades Negativos': qtdTradesNegativos, 'Média dos Trades Positivos': mediaTradesPositivos, 'Média dos Trades Negativos': mediaTradesNegativos, 'Maior Trade Positivo': maiorTradePositivo, 'Menor Trade Positivo': menorTradePositivo, 'Maior Trade Negativo': maiorTradeNegativo, 'Menor Trade Negativo': menorTradeNegativo, 'Resultado': resultado}, ignore_index = True)
 
                         variacao = round(variacao + 0.1, 2)
                         linha_tabela_resumo_acao +=1
