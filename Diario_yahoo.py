@@ -582,7 +582,7 @@ def compra_percFechamentoDiaAnterior(acoes_selecionadas, dataInicial, dataFinal,
                     numAcoes = numAcoes + 1
                     
                     fibonacci_acao = calcula_fibonacci(dados_acao_tabela, ultima_data, acao, ultimoFechamentoAjustado)
-                    fibonacci_consolidado = fibonacci_consolidado.append(fibonacci_acao)
+                    fibonacci_consolidado = pd.concat([fibonacci_consolidado, fibonacci_acao])
                     
                     # Para cada linha, coloca o nome do ativo na coluna Ativo, para conseguir filtrar depois
                     # e calcula o % Mínima e o Fechamento %
@@ -957,7 +957,7 @@ def venda_fechamentoDia(acoes_selecionadas, dataInicial, dataFinal, variacao_min
                     numAcoes = numAcoes + 1
                     
                     fibonacci_acao = calcula_fibonacci(dados_acao_tabela, ultima_data, acao, ultimoFechamentoAjustado)
-                    fibonacci_consolidado = fibonacci_consolidado.append(fibonacci_acao)
+                    fibonacci_consolidado = pd.concat([fibonacci_consolidado, fibonacci_acao])
                     
                     # Para cada linha, coloca o nome do ativo na coluna Ativo, para conseguir filtrar depois
                     # e calcula o % Mínima e o Fechamento %
