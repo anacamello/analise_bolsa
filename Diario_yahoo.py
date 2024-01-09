@@ -18,7 +18,7 @@ import itertools
 from decimal import Decimal
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier 
-import plotly.graph_objects as go
+#import plotly.graph_objects as go
 from yahooquery import Ticker
 from binance.client import Client
 from time import sleep
