@@ -1125,7 +1125,11 @@ def venda_fechamentoDia(acoes_selecionadas, dataInicial, dataFinal, variacao_min
 
                         if(ganho > 0.75): 
 
-                            tabela_relatorio_venda = tabela_relatorio_venda.append({'Código': acao, 'Variação': variacao, 'Ganho': ganho, 'Média do Volume no Período': mediaVolume, 'Preço de Entrada': precoEntrada, 'Data Referência': ultima_data, 'Qtd. Trades': qtdTrades, 'Qtd. Trades Positivos': qtdTradesPositivos, 'Qtd. Trades Negativos': qtdTradesNegativos, 'Média dos Trades Positivos': mediaTradesPositivos, 'Média dos Trades Negativos': mediaTradesNegativos, 'Maior Trade Positivo': maiorTradePositivo, 'Menor Trade Positivo': menorTradePositivo, 'Maior Trade Negativo': maiorTradeNegativo, 'Menor Trade Negativo': menorTradeNegativo, 'Resultado': resultado}, ignore_index = True)
+                            tabela_relatorio_venda = tabela_relatorio_venda['Código': acao] + tabela_relatorio_venda['Variação': variacao] + tabela_relatorio_venda['Ganho': ganho] + tabela_relatorio_venda['Média do Volume no Período': mediaVolume] + 
+                                tabela_relatorio_venda['Preço de Entrada': precoEntrada] + tabela_relatorio_venda['Data Referência': ultima_data] + tabela_relatorio_venda['Qtd. Trades': qtdTrades] +
+                                tabela_relatorio_venda['Qtd. Trades Positivos': qtdTradesPositivos] + tabela_relatorio_venda['Qtd. Trades Negativos': qtdTradesNegativos] + tabela_relatorio_venda['Média dos Trades Positivos': mediaTradesPositivos] +
+                                tabela_relatorio_venda['Média dos Trades Negativos': mediaTradesNegativos] + tabela_relatorio_venda['Maior Trade Positivo': maiorTradePositivo] + tabela_relatorio_venda['Menor Trade Positivo': menorTradePositivo] +
+                                tabela_relatorio_venda['Maior Trade Negativo': maiorTradeNegativo] + tabela_relatorio_venda['Menor Trade Negativo': menorTradeNegativo] + tabela_relatorio_venda['Resultado': resultado]
 
                         variacao = round(variacao + 0.1, 2)
                         linha_tabela_resumo_acao +=1
