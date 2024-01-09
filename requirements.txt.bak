@@ -1,0 +1,14 @@
+yfinance
+st_aggrid
+streamlit
+pandas
+numpynumpy==1.22
+pandas_datareader
+datetime
+pytz
+itertools
+decimal
+sklearn.model_selection
+plotly.graph_objects
+binance.client
+matplotlib.pyplot
