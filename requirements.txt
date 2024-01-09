@@ -1,4 +1,4 @@
 yahooquery
 streamlit-aggrid
 scikit-learn
-binance.client
+python-binance
