@@ -1,2 +1,3 @@
 yfinance
 streamlit-aggrid
+scikit-learn
