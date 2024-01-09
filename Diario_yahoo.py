@@ -1281,7 +1281,7 @@ def top10(tabela_relatorio, compra_venda, dif_datas):
 
 st.set_page_config(page_title="Análise dados da Bolsa", layout="wide", initial_sidebar_state="expanded")
 
-acoes_completo = pd.read_csv('../Dados/acoes.csv', sep=";")
+acoes_completo = pd.read_csv('acoes.csv', sep=";")
 acoes_lista = list(acoes_completo['Codigo'])
 
 estados_df2 = pd.DataFrame()
