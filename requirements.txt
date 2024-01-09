@@ -1,3 +1,4 @@
+yfinance
 st_aggrid
 streamlit
 pandas
@@ -9,7 +10,6 @@ itertools
 decimal
 sklearn.model_selection
 plotly.graph_objects
-MetaTrader5
 binance.client
 time import
 matplotlib.pyplot
