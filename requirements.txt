@@ -11,5 +11,4 @@ decimal
 sklearn.model_selection
 plotly.graph_objects
 binance.client
-time import
 matplotlib.pyplot
