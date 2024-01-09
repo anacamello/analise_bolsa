@@ -763,7 +763,7 @@ def compra_percFechamentoDiaAnterior(acoes_selecionadas, dataInicial, dataFinal,
                                                                  tabela_relatorio_compra['Qtd. Trades': qtdTrades], tabela_relatorio_compra['Qtd. Trades Positivos': qtdTradesPositivos], tabela_relatorio_compra['Qtd. Trades Negativos': qtdTradesNegativos], 
                                                                  tabela_relatorio_compra['Média dos Trades Positivos': mediaTradesPositivos], tabela_relatorio_compra['Média dos Trades Negativos': mediaTradesNegativos], tabela_relatorio_compra['Maior Trade Positivo': maiorTradePositivo],
                                                                  tabela_relatorio_compra['Menor Trade Positivo': menorTradePositivo], tabela_relatorio_compra['Maior Trade Negativo': maiorTradeNegativo], tabela_relatorio_compra['Menor Trade Negativo': menorTradeNegativo], 
-                                                                 tabela_relatorio_compra['Resultado': resultado]])
+                                                                 tabela_relatorio_compra['Resultado': resultado]], index=['Código'])
 
                         variacao = round(variacao + 0.1, 2)
                         linha_tabela_resumo_acao +=1
