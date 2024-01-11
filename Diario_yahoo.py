@@ -474,6 +474,8 @@ def compra_percFechamentoDiaAnterior(acoes_selecionadas, dataInicial, dataFinal,
     numAcoes = 0
     
     sleep_time = 1
+    
+    num_linha = 0
 
     #Cria a tabela de relatório - Aba Consolidado
     tabela_relatorio_compra = pd.DataFrame()
@@ -758,9 +760,17 @@ def compra_percFechamentoDiaAnterior(acoes_selecionadas, dataInicial, dataFinal,
 
                         if(ganho > 0.75): 
                             
-                            tabela_relatorio_compra_novo = pd.DataFrame(tabela_relatorio_compra['Código': acao], tabela_relatorio_compra['Variação': variacao], tabela_relatorio_compra['Ganho': ganho], tabela_relatorio_compra['Média do Volume no Período': mediaVolume], tabela_relatorio_compra['Preço de Entrada': precoEntrada], tabela_relatorio_compra['Data Referência': ultima_data],                                                                 tabela_relatorio_compra['Qtd. Trades': qtdTrades], tabela_relatorio_compra['Qtd. Trades Positivos': qtdTradesPositivos], tabela_relatorio_compra['Qtd. Trades Negativos': qtdTradesNegativos], tabela_relatorio_compra['Média dos Trades Positivos': mediaTradesPositivos], tabela_relatorio_compra['Média dos Trades Negativos': mediaTradesNegativos], tabela_relatorio_compra['Maior Trade Positivo': maiorTradePositivo],tabela_relatorio_compra['Menor Trade Positivo': menorTradePositivo], tabela_relatorio_compra['Maior Trade Negativo': maiorTradeNegativo], tabela_relatorio_compra['Menor Trade Negativo': menorTradeNegativo], tabela_relatorio_compra['Resultado': resultado])
+                            tabela_relatorio_compra.loc[num_linha] = [acao, variacao, ganho, mediaVolume, precoEntrada, ultima_data, qtdTrades, qtdTradesPositivos, qtdTradesNegativos, mediaTradesPositivos, mediaTradesNegativos, maiorTradePositivo, menorTradePositivo, maiorTradeNegativo, menorTradeNegativo, resultado]
+                        
+                            #tabela_relatorio_compra_novo = pd.DataFrame(tabela_relatorio_compra['Código': acao], tabela_relatorio_compra['Variação': variacao], tabela_relatorio_compra['Ganho': ganho], tabela_relatorio_compra['Média do Volume no Período': mediaVolume], 
+                            # tabela_relatorio_compra['Preço de Entrada': precoEntrada], tabela_relatorio_compra['Data Referência': ultima_data], tabela_relatorio_compra['Qtd. Trades': qtdTrades], tabela_relatorio_compra['Qtd. Trades Positivos': qtdTradesPositivos], 
+                            # tabela_relatorio_compra['Qtd. Trades Negativos': qtdTradesNegativos], tabela_relatorio_compra['Média dos Trades Positivos': mediaTradesPositivos], tabela_relatorio_compra['Média dos Trades Negativos': mediaTradesNegativos], 
+                            # tabela_relatorio_compra['Maior Trade Positivo': maiorTradePositivo],tabela_relatorio_compra['Menor Trade Positivo': menorTradePositivo], tabela_relatorio_compra['Maior Trade Negativo': maiorTradeNegativo], 
+                            #tabela_relatorio_compra['Menor Trade Negativo': menorTradeNegativo], tabela_relatorio_compra['Resultado': resultado])
                             
-                            tabela_relatorio_compra = pd.concat([tabela_relatorio_compra, tabela_relatorio_compra_novo], axis = 0)
+                            #tabela_relatorio_compra = pd.concat([tabela_relatorio_compra, tabela_relatorio_compra_novo], axis = 0)
+                            
+                            num_linha = num_linha + 1
 
                         variacao = round(variacao + 0.1, 2)
                         linha_tabela_resumo_acao +=1
